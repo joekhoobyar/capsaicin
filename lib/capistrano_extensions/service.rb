@@ -2,7 +2,7 @@ module Service
 
 	LSB_DEFAULT_ACTIONS = %w(status start stop restart)
 
-	OCF_DEFAULT_ACTIONS = [	[ :status, '-W' ],
+	CRM_DEFAULT_ACTIONS = [	[ :status, '-W' ],
 													[ :summary, "-x | awk '/^raw xml:/ { exit }; { print }'" ],
 													[ :start, "--meta -d 'target_role'" ],
 													[ :stop, "--meta -p 'target_role' -v 'stopped'" ] ]
@@ -12,10 +12,10 @@ module Service
 	end
 	SVC_ACTION_CAPTIONS.update :status => 'Check Status', :check => 'Check Config', :summary => 'Status Summary'
 
-	def ocf(id,*args)
+	def crm(id,*args)
 		svc_desc = next_description(:reset)
 		svc_cmd = "/usr/sbin/crm_resource -r #{id.to_s.split(':').last}"
-		svc_actions = OCF_DEFAULT_ACTIONS 
+		svc_actions = CRM_DEFAULT_ACTIONS 
 
 		if Hash === args.last
 			options = args.pop
