@@ -7,7 +7,8 @@ module Service
 													[ :start, "--meta -d 'target_role'" ],
 													[ :stop, "--meta -p 'target_role' -v 'stopped'" ] ]
 
-	CRM_OCF_DEFAULT_ACTIONS = [ [ :validate, '-c -C' ] ]
+	CRM_OCF_DEFAULT_ACTIONS = [ [ :validate, '-c -C' ],
+															[ :monitor, '-c -m' ] ]
 
 	SVC_ACTION_CAPTIONS = Hash.new do |h,k|
 		h[k] = "#{k.to_s.capitalize} Service"
