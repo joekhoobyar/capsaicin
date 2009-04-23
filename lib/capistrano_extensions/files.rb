@@ -1,21 +1,10 @@
-require 'fileutils'
+require File.join(File.dirname(__FILE__), %w(files local.rb))
 
-module CapistranoExtensions
-  module Files
-
-    include FileUtils::Verbose
-
-    public *FileUtils::Verbose.methods(false)
-    private *%w(copy_entry copy_file copy_stream
-                remove_entry remove_entry_secure remove_file
-                compare_file compare_stream
-                uptodate?)
-
-    class_eval(%w(exists? directory? executable?).map do |m|
-      "def #{m}(f) File.#{m}(f) end"
-    end.join("\n"))
-
-  end
+module CapistranoExtensions::Files
+  class_eval(Local.public_instance_methods(false).map do |m|
+    "def #{m}(*f) local_files.#{m}(*f) end"
+  end.join("\n"))
 end
 
 Capistrano.plugin :files, CapistranoExtensions::Files
+
