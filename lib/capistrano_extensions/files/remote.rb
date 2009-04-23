@@ -7,6 +7,8 @@ module CapistranoExtensions
       def tail_f(file, n=10)
         cmd = "tail -n #{n} -f #{_q file}"
         _via == :system ? system(cmd) : stream(cmd)
+      rescue Interrupt
+        logger.trace "interrupted (Ctrl-C)" if logger
       end
 
       def upload(*args)

@@ -5,11 +5,10 @@ module CapistranoExtensions
     module Local
 
       def tail_f(file, n=10)
-        unless defined? File::Tail::Logfile
-          gem 'file-tail'
-          require 'file/tail'
-        end
+        unless defined? File::Tail::Logfile then gem 'file-tail'; require 'file/tail' end
         File::Tail::Logfile.tail(file, :backward=>n) do |line| puts line end
+      rescue Interrupt
+        logger.trace "interrupted (Ctrl-C)" if logger
       end
 
       def upload(from, to)
