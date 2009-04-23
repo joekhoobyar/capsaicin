@@ -4,6 +4,14 @@ module CapistranoExtensions
   module Files
     module Local
 
+      def tail_f(file, n=10)
+        unless defined? File::Tail::Logfile
+          gem 'file-tail'
+          require 'file/tail'
+        end
+        File::Tail::Logfile.tail(file, :backward=>n) do |line| puts line end
+      end
+
       def upload(from, to)
         cp(from, to)
       end

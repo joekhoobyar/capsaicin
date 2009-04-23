@@ -4,6 +4,10 @@ module CapistranoExtensions
   module Files
     module Remote
 
+      def tail_f(file, n=10)
+        stream("tail -n #{n} -f #{_q file}")
+      end
+
       def upload(*args)
         @config.upload(*args)
       end
