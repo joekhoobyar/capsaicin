@@ -10,11 +10,11 @@ module CapistranoExtensions
       end
 
       def upload(*args)
-        @config.upload(*args)
+        _via == :system ? cp(*args) : upload(*args)
       end
 
       def download(*args)
-        @config.download(*args)
+        _via == :system ? cp(*args) : download(*args)
       end
 
       def cd(dir, options={})
@@ -160,9 +160,11 @@ module CapistranoExtensions
         when :system
           @quiet or $stderr.puts cmd
           system cmd
+        when :sudo
+          sudo cmd, :as => @config.fetch(:runner, 'app')
         else
-          invoke_command cmd, :via => _via
-        end
+          invoke_command cmd, :via => v
+        end          
       end
 
       def _q(*list)
@@ -174,7 +176,7 @@ module CapistranoExtensions
         when :local
           :system
         when :remote, NilClass
-          (get(:run_method) if exists?(:run_method)) || :run
+          :runner
         else 
           v
         end
