@@ -7,11 +7,7 @@ module CapistranoExtensions::Files
   end.join("\n"))
 
   def _via
-    if ! @config.exists?(:files_via) or @config.files_via != :local then
-      :remote
-    else
-      :local
-    end
+    @config.fetch(:files_via, :remote).to_sym != :local ? :remote : :local
   end
 end
 
