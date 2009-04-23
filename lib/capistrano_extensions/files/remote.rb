@@ -162,8 +162,6 @@ module CapistranoExtensions
         when :system
           @quiet or $stderr.puts cmd
           system cmd
-        when :sudo
-          sudo cmd, :as => @config.fetch(:runner, 'app')
         else
           invoke_command cmd, :via => v
         end          
@@ -178,7 +176,7 @@ module CapistranoExtensions
         when :local
           :system
         when :remote, NilClass
-          nil
+          @config.fetch(:run_method, nil)
         else 
           v
         end
