@@ -6,17 +6,17 @@ module CapistranoExtensions
 
       def tail_f(file, n=10)
         cmd = "tail -n #{n} -f #{_q file}"
-        _via == :system ? system(cmd) : stream(cmd)
+        _via == :system ? system(cmd) : stream(cmd, :via => _via)
       rescue Interrupt
         logger.trace "interrupted (Ctrl-C)" if logger
       end
 
       def upload(*args)
-        _via == :system ? cp(*args) : @config.upload(*args)
+        _via == :system ? cp(*args) : @config.upload(*args, :via => _via)
       end
 
       def download(*args)
-        _via == :system ? cp(*args) : @config.download(*args)
+        _via == :system ? cp(*args) : @config.download(*args, :via => _via)
       end
 
       def cd(dir, options={})
@@ -178,7 +178,7 @@ module CapistranoExtensions
         when :local
           :system
         when :remote, NilClass
-          :runner
+          nil
         else 
           v
         end
