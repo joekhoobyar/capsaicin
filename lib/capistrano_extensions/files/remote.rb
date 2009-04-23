@@ -5,7 +5,8 @@ module CapistranoExtensions
     module Remote
 
       def tail_f(file, n=10)
-        stream("tail -n #{n} -f #{_q file}")
+        cmd = "tail -n #{n} -f #{_q file}"
+        _via == :system ? system(cmd) : stream(cmd)
       end
 
       def upload(*args)
