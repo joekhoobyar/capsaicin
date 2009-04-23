@@ -14,6 +14,8 @@ begin
 
     s.authors = ["Joe Khoobyar"]
     s.email = "joe@ankhcraft.com"
+
+    s.add_dependency 'capistrano'
   end
 rescue LoadError
   puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
@@ -36,5 +38,5 @@ Rake::TestTask.new do |t|
   t.libs << "lib"
 end
 
-task :default => :package
+task :default => :build
 
