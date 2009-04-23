@@ -15,10 +15,6 @@ def git_tree_version
     when 1
       @tree_version << '.0'
     end
-  else
-    $: << "lib"
-    require 'jk-capistrano-extensions'
-    @tree_version = JkCapistranoExtensions.release
   end
   @tree_version
 end
