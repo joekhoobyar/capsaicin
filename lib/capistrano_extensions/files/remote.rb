@@ -123,7 +123,7 @@ module CapistranoExtensions
     private
 
       def silence!(quiet=false)
-        quiet = (FalseClass===options[:verbose]) if Hash === quiet
+        quiet = (FalseClass===quiet[:verbose]) if Hash === quiet
         orig_quiet, @quiet = @quiet, quiet
         yield
       ensure
