@@ -12,11 +12,11 @@ module CapistranoExtensions
       end
 
       def upload(*args)
-        _via == :system ? cp(*args) : upload(*args)
+        _via == :system ? cp(*args) : @config.upload(*args)
       end
 
       def download(*args)
-        _via == :system ? cp(*args) : download(*args)
+        _via == :system ? cp(*args) : @config.download(*args)
       end
 
       def cd(dir, options={})
@@ -174,7 +174,7 @@ module CapistranoExtensions
       end
 
       def _via
-        case (v = files_via)
+        case (v = @config.fetch(:files_via, nil))
         when :local
           :system
         when :remote, NilClass
