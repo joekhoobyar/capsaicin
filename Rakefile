@@ -73,6 +73,12 @@ else
     p.need_tar = false
     p.need_zip = false
   end
+
+  desc "Generate a gemspec"
+  task :gemspec do
+    open("capistrano-extensions.gemspec", "w") do |f| f << spec.to_ruby end
+    puts "gemspec successfully created."
+  end
 end
 
 # ---------  RDoc Documentation ---------
