@@ -107,20 +107,28 @@ module CapistranoExtensions
         _r 'touch', args
       end
 
-      def exists?(a)
-        _r "[ -f #{_q a} ]"
+      def exists?(a, options={:verbose=>false})
+        silence!(options) { _r "[ -f #{_q a} ]" }
       end
 
-      def directory?(a)
-        _r "[ -d #{_q a} ]"
+      def directory?(a, options={:verbose=>false})
+        silence!(options) { _r "[ -d #{_q a} ]" }
       end
 
-      def executable?(a)
-        _r "[ -x #{_q a} ]"
+      def executable?(a, options={:verbose=>false})
+        silence!(options) { _r "[ -x #{_q a} ]" }
       end
 
 
     private
+
+      def silence!(quiet=false)
+        quiet = (FalseClass===options[:verbose]) if Hash === quiet
+        orig_quiet, @quiet = @quiet, quiet
+        yield
+      ensure
+        @quiet = orig_quiet
+      end
 
       def _r(cmd, args=nil, min=nil)
         case args
@@ -137,7 +145,7 @@ module CapistranoExtensions
 
         case (v = _via)
         when :system
-          $stderr.puts cmd
+          @quiet or $stderr.puts cmd
           system cmd
         else
           invoke_command cmd, :via => _via
