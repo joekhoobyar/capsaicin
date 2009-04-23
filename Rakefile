@@ -10,7 +10,7 @@ begin
     s.name = "capistrano-extensions"
     s.homepage = "http://github.com/joekhoobyar/capistrano-extensions"
     s.summary = "Joe Khoobyar's Capistrano Extensions"
-    s.description = %Q{Joe Khoobyar's Capistrano Extensions}
+    s.description = %Q{Various capistrano extensions}
 
     s.authors = ["Joe Khoobyar"]
     s.email = "joe@ankhcraft.com"
