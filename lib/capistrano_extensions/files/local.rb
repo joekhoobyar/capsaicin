@@ -4,6 +4,15 @@ module CapistranoExtensions
   module Files
     module Local
 
+      def upload(from, to)
+        cp(from, to)
+      end
+
+      def download(from, to)
+        cp(from, to)
+      end
+
+
       include FileUtils::Verbose
 
       public *FileUtils::Verbose.methods(false)

@@ -4,6 +4,14 @@ module CapistranoExtensions
   module Files
     module Remote
 
+      def upload(*args)
+        @config.upload(*args)
+      end
+
+      def download(*args)
+        @config.download(*args)
+      end
+
       def cd(dir, options={})
         if block_given?
           dir, dir2 = pwd, dir
