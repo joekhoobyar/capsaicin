@@ -3,6 +3,7 @@ unless Capistrano::Configuration.respond_to?(:instance)
 end
 require 'capistrano'
 
+require "#{File.dirname(__FILE__)}/capistrano_extensions/command.rb"
 require "#{File.dirname(__FILE__)}/capistrano_extensions/invocation.rb"
 require "#{File.dirname(__FILE__)}/capistrano_extensions/files.rb"
 require "#{File.dirname(__FILE__)}/capistrano_extensions/service.rb"
