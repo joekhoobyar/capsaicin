@@ -15,12 +15,12 @@ Gem::Specification.new do |s|
   s.files = [
     "Rakefile",
     "VERSION.yml",
-    "lib/capistrano_extensions/command.rb",
     "lib/capistrano_extensions/files.rb",
     "lib/capistrano_extensions/files/local.rb",
     "lib/capistrano_extensions/files/remote.rb",
     "lib/capistrano_extensions/invocation.rb",
     "lib/capistrano_extensions/service.rb",
+    "lib/capistrano_extensions/wrap_exec.rb",
     "lib/jk_capistrano_extensions.rb"
   ]
   s.has_rdoc = true

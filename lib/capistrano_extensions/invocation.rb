@@ -1,4 +1,4 @@
-module CapistranoExtensions
+module CapistranoExtension
   module Invocation
     def sudo_as(*args, &block)
       options = Hash===args.last ? args.pop.dup :  {}
@@ -14,7 +14,8 @@ module CapistranoExtensions
     
     def sudo_su_to(*args, &block)
       options = Hash===args.last ? args.pop.dup :  {}
-      options[:pre_exec] = sudo("su - #{fetch(:runner, nil)}")
+      options[:data] = "stty -echo >/dev/null; PS1=''; #{args[0]} ; exit $?\n"
+      args[0] = sudo + " su - #{fetch(:runner, nil)}"
       run *args.push(options), &block
     end
   end
