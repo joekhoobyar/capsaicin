@@ -8,14 +8,14 @@ module CapistranoExtension
     
     def sudo_su(*args, &block)
       options = Hash===args.last ? args.pop.dup :  {}
-      args[0] = "su #{fetch(:runner, nil)} -c '#{args[0].gsub '\'', '\'"\'"\''}'"
+      args[0] = "su #{fetch(:runner, nil)} -c '#{args[0].gsub '\'', '\\\\\''}'"
       sudo *args.push(options), &block
     end
     
     def sudo_su_to(*args, &block)
       options = Hash===args.last ? args.pop.dup :  {}
       options[:shell] = false
-      args[0] = "echo '#{args[0].gsub('\'', '\'"\'"\'')}' | #{sudo} su - #{fetch(:runner, nil)}"
+      args[0] = "echo '#{args[0].gsub("'", '\\\\\'')}' | #{sudo} su - #{fetch(:runner, nil)}"
       run *args.push(options), &block
     end
   end
