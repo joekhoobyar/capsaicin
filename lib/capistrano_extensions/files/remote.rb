@@ -122,30 +122,41 @@ module CapistranoExtensions
         _r 'touch', args
       end
 
-      def exists?(a, options={:verbose=>false})
-        silence!(options) { _r "[ -f #{_q a} ]" }
+      def exists?(a)
+        _t "test -f", a
       end
 
       def directory?(a, options={:verbose=>false})
-        silence!(options) { _r "[ -d #{_q a} ]" }
+        _t "test -d", a
       end
 
       def executable?(a, options={:verbose=>false})
-        silence!(options) { _r "[ -x #{_q a} ]" }
+        _t "test -x", a
       end
 
 
     private
 
-      def silence!(quiet=false)
-        quiet = (FalseClass===quiet[:verbose]) if Hash === quiet
-        orig_quiet, @quiet = @quiet, quiet
-        yield
-      ensure
-        @quiet = orig_quiet
+      def _t(cmd, args=nil, min=nil)
+        cmd = _a cmd, args, min
+        if _via == :system then
+          system(cmd)
+        else
+          capture("#{cmd}; echo $?", :via => _via).strip == '0'
+        end
       end
 
       def _r(cmd, args=nil, min=nil)
+        cmd = _a cmd, args, min
+        if _via != :system then
+          invoke_command(cmd, :via => _via)
+        else
+          $stdout.puts cmd
+          system cmd
+        end          
+      end
+
+      def _a(cmd, args=nil, min=nil)
         case args
         when NilClass
           raise ArgumentError unless min.nil? or min.zero?
@@ -154,17 +165,9 @@ module CapistranoExtensions
           raise ArgumentError if (min || 1) > args.length
           cmd = "#{cmd} #{_q(*args)}" if args.any?
         else
-          raise ArgumentError if min.nil? or min < 1
+          raise ArgumentError if min and min < 1
           cmd = "#{cmd} #{_q args}"
         end
-
-        case (v = _via)
-        when :system
-          @quiet or $stderr.puts cmd
-          system cmd
-        else
-          invoke_command cmd, :via => v
-        end          
       end
 
       def _q(*list)
