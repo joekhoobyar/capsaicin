@@ -28,9 +28,20 @@ module CapistranoExtensions
                   compare_file compare_stream
                   uptodate?)
 
-      class_eval(%w(exists? directory? executable?).map do |m|
-        "def #{m}(f) File.#{m}(f) end"
-      end.join("\n"))
+      def exists?(a, options={})
+        $stdout.puts "[ -f #{_q a} ] ]"
+        File.exists? a
+      end
+
+      def directory?(a, options={})
+        $stdout.puts "[ -d #{_q a} ]"
+        File.directory? a
+      end
+
+      def executable?(a, options={})
+        $stdout.puts "[ -x #{_q a} ]"
+        File.executable? a
+      end
 
     end
   end
