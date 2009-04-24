@@ -12,11 +12,11 @@ module CapistranoExtensions
       end
 
       def upload(*args)
-        _via == :system ? cp(*args) : @config.upload(*args.push(:via => _via))
+        _via == :system ? cp(*args) : @config.upload(*args)
       end
 
       def download(*args)
-        _via == :system ? cp(*args) : @config.download(*args.push(:via => _via))
+        _via == :system ? cp(*args) : @config.download(*args)
       end
 
       def cd(dir, options={})
