@@ -15,7 +15,7 @@ module CapistranoExtension
     def sudo_su_to(*args, &block)
       options = Hash===args.last ? args.pop.dup :  {}
       options[:shell] = false
-      args[0] = "echo '#{args[0].gsub /(['\n])/, '\\\1'}' | #{sudo} su - #{fetch(:runner, nil)}"
+      args[0] = "echo '#{args[0].gsub /(['\n])/, "\\#{n}"}' | #{sudo} su - #{fetch(:runner, nil)}"
       run *args.push(options), &block
     end
   end
