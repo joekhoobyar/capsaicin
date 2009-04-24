@@ -14,7 +14,7 @@ module CapistranoExtensions
     
     def sudo_su_to(*args, &block)
       options = Hash===args.last ? args.pop.dup :  {}
-      options[:pre_exec] = sudo("su #{fetch(:runner, nil)} -")
+      options[:pre_exec] = sudo("su - #{fetch(:runner, nil)}")
       run *args.push(options), &block
     end
   end
