@@ -1,6 +1,13 @@
 module CapistranoExtensions
 
   module Invocation
+    def local_run(*args, &block)
+      args.pop if Hash===args.last
+      args = args.first
+      logger.debug "executing locally: #{args}"
+      system args
+    end
+    
     def sudo_as(*args, &block)
       options = Hash===args.last ? args.pop.dup :  {}
       options[:as] = fetch(:runner, nil)
@@ -18,11 +25,9 @@ module CapistranoExtensions
       options[:shell] = false
       cmd = args[0].gsub(/[$\\`"]/) { |m| "\\#{m}" }
       args[0] = "echo \"#{cmd}\" | #{sudo} su - #{fetch(:runner, nil)}"
-      #args[0] = "echo \"#{.gsub('"', '\\"')}\" | #{sudo} su - #{fetch(:runner, nil)}"
       run *args.push(options), &block
     end
   end
 
   Capistrano::Configuration.send :include, Invocation
-
 end

@@ -4,28 +4,28 @@ module CapistranoExtensions
 
       DEFAULT_ACTIONS = %w(status start stop restart)
 
+      # Check for the existance of a generic Windows NT service.
+      def lsb?(id)
+        files.exists? "/etc/init.d/#{id.to_s.split(':').last}"
+      end
 
       # Defines a recipe to control a generic LSB service.
       #
       def lsb(id,*args)
-        svc_desc = next_description(:reset)
-        svc_cmd = "/etc/init.d/#{id.to_s.split(':').last}"
-        svc_actions = DEFAULT_ACTIONS 
+        options = Hash===args.last ? args.pop : {}
 
-        if Hash === args.last
-          options = args.pop
-          svc_desc = id.to_s.capitalize unless svc_desc or options.delete(:hide)
-        else
-          options = {}
-        end
+        svc_name = id.to_s
+        svc_desc = next_description(:reset) || (svc_name.capitalize unless options.delete(:hide))
+        svc_actions = DEFAULT_ACTIONS 
         svc_actions += args.pop if Array === args.last
 
-        case args.first
-        when String; id = args.shift.intern
-        when Symbol; id = args.shift
-        end
-
         namespace id do
+          case args.first
+          when String; id = args.shift.intern
+          when Symbol; id = args.shift
+          end
+          svc_cmd = "/etc/init.d/#{id.to_s.split(':').last}"
+
           desc "#{svc_desc}: #{SVC_ACTION_CAPTIONS[:status]}" if svc_desc
           task :default, options do
               sudo "#{svc_cmd} status"

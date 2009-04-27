@@ -13,24 +13,21 @@ module CapistranoExtensions
       # Defines a recipe to control a cluster-managed service, using heartbeat or pacemaker.
       #
       def crm(id,*args)
-        svc_desc = next_description(:reset)
-        svc_cmd = "/usr/sbin/crm_resource -r #{id.to_s.split(':').last}"
-        svc_actions = DEFAULT_ACTIONS
+        options = Hash===args.last ? args.pop : {}
 
-        if Hash === args.last
-          options = args.pop
-          svc_desc = id.to_s.capitalize unless svc_desc or options.delete(:hide)
-        else
-          options = {}
-        end
+        svc_name = id.to_s
+        svc_desc = next_description(:reset) || (svc_name.capitalize unless options.delete(:hide))
+        svc_actions = DEFAULT_ACTIONS 
         svc_actions += args.pop if Array === args.last
 
-        case args.first
-        when String; id = args.shift.intern
-        when Symbol; id = args.shift
-        end
-
         namespace id do
+
+          case args.first
+          when String; id = args.shift.intern
+          when Symbol; id = args.shift
+          end
+          svc_cmd = "/usr/sbin/crm_resource -r #{id.to_s.split(':').last}"
+
           desc "#{svc_desc}: #{SVC_ACTION_CAPTIONS[:status]}" if svc_desc
           task :default, options do
               sudo "#{svc_cmd} -W"
@@ -55,19 +52,21 @@ module CapistranoExtensions
       # see http://github.com/joekhoobyar/ha-tools
       #
       def crm_ocf(id,*args)
-        svc_desc = next_description(:reset)
-        svc_cmd = "ocf_resource -g #{id.to_s.split(':').last}"
-        svc_actions = DEFAULT_ACTIONS
+        options = Hash===args.last ? args.pop : {}
 
-        if Hash === args.last
-          options = args.pop
-          svc_desc = id.to_s.capitalize unless svc_desc or options.delete(:hide)
-          svc_actions += args.shift if Array === args.first
-        else
-          options = {}
-        end
+        svc_name = id.to_s
+        svc_desc = next_description(:reset) || (svc_name.capitalize unless options.delete(:hide))
+        svc_actions = DEFAULT_ACTIONS 
+        svc_actions += args.pop if Array === args.last
 
         namespace id do
+
+          case args.first
+          when String; id = args.shift.intern
+          when Symbol; id = args.shift
+          end
+          svc_cmd = "ocf_resource -g #{id.to_s.split(':').last}"
+
           svc_actions.each do |svc_action,svc_args|
             svc_action = svc_action.intern if String === svc_action
             desc "#{svc_desc}: #{SVC_ACTION_CAPTIONS[svc_action]}" if svc_desc

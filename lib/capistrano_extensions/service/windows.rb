@@ -14,24 +14,19 @@ module CapistranoExtensions
       # Defines a recipe to control a generic Windows NT service.
       #
       def windows(id,*args)
-        svc_name = id.to_s
-        svc_desc = next_description(:reset)
-        svc_actions = DEFAULT_ACTIONS 
+        options = Hash===args.last ? args.pop : {}
 
-        if Hash === args.last
-          options = args.pop
-          svc_desc = id.to_s.capitalize unless svc_desc or options.delete(:hide)
-        else
-          options = {}
-        end
+        svc_name = id.to_s
+        svc_desc = next_description(:reset) || (svc_name.capitalize unless options.delete(:hide))
+        svc_actions = DEFAULT_ACTIONS 
         svc_actions += args.pop if Array === args.last
 
-        case args.first
-        when String; id = args.shift.intern
-        when Symbol; id = args.shift
-        end
-
         namespace id do
+          case args.first
+          when String; id = args.shift.intern
+          when Symbol; id = args.shift
+          end
+
           [:default, :status].each do |k|
             desc "#{svc_desc}: #{SVC_ACTION_CAPTIONS[:status]}" if svc_desc
             task k, options do

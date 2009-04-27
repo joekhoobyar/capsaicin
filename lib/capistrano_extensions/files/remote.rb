@@ -23,7 +23,7 @@ module CapistranoExtensions
 
       def tail_f(file, n=10)
         cmd = "tail -n #{n} -f #{_q file}"
-        _via == :system ? system(cmd) : stream(cmd, :via => _via)
+        _via == :system ? local_run(cmd) : stream(cmd, :via => _via)
       rescue Interrupt
         logger.trace "interrupted (Ctrl-C)" if logger
       end
@@ -62,7 +62,7 @@ module CapistranoExtensions
       def _t(cmd, args=nil, min=nil)
         cmd = _a cmd, args, min
         if _via == :system then
-          system(cmd)
+          local_run(cmd)
         else
           capture("#{cmd}; echo $?", :via => _via).strip == '0'
         end
@@ -71,10 +71,9 @@ module CapistranoExtensions
       def _r(cmd, args=nil, min=nil)
         cmd = _a cmd, args, min
         if _via != :system then
-          invoke_command(cmd, :via => _via)
+          invoke_command cmd, :via => _via
         else
-          $stdout.puts cmd
-          system cmd
+          local_run cmd
         end          
       end
 
