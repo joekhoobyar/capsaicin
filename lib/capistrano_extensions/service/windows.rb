@@ -1,15 +1,15 @@
 module CapistranoExtensions
   module Service
-    module LSB
+    module Windows
 
       DEFAULT_ACTIONS = %w(status start stop restart)
 
 
-      # Defines a recipe to control a generic LSB service.
+      # Defines a recipe to control a generic Windows NT service.
       #
-      def lsb(id,*args)
+      def windows(id,*args)
         svc_desc = next_description(:reset)
-        svc_cmd = "/etc/init.d/#{id.to_s.split(':').last}"
+        svc_cmd = "net"
         svc_actions = DEFAULT_ACTIONS 
 
         if Hash === args.last
@@ -18,7 +18,7 @@ module CapistranoExtensions
         else
           options = {}
         end
-        svc_actions += args.shift if Array === args.first
+        svc_actions += args.pop if Array === args.last
 
         case args.first
         when String; id = args.shift.intern
@@ -28,14 +28,14 @@ module CapistranoExtensions
         namespace id do
           desc "#{svc_desc}: #{SVC_ACTION_CAPTIONS[:status]}" if svc_desc
           task :default, options do
-              sudo "#{svc_cmd} status"
+              sudo "#{svc_cmd} status \"#{id}\""
           end
 
           svc_actions.each do |svc_action|
             svc_action = svc_action.intern
             desc "#{svc_desc}: #{SVC_ACTION_CAPTIONS[svc_action]}" if svc_desc
             task svc_action, options do
-              sudo "#{svc_cmd} #{svc_action}"
+              sudo "#{svc_cmd} #{svc_action} \"#{id}\""
             end
           end
 
@@ -45,3 +45,4 @@ module CapistranoExtensions
     end
   end
 end
+

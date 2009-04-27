@@ -4,6 +4,7 @@ module CapistranoExtensions
 
     require File.join(File.dirname(__FILE__), %w(service lsb.rb))
     require File.join(File.dirname(__FILE__), %w(service crm.rb))
+    require File.join(File.dirname(__FILE__), %w(service windows.rb))
 
     SVC_ACTION_CAPTIONS = Hash.new do |h,k|
       h[k] = "#{k.to_s.capitalize} Service"
@@ -11,7 +12,7 @@ module CapistranoExtensions
                 :check => 'Check Config', 
                 :summary => 'Status Summary'
 
-    include LSB, CRM
+    include LSB, CRM, Windows
 
   end
 
