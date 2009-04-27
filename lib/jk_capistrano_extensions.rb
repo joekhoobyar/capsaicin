@@ -3,6 +3,7 @@ unless Capistrano::Configuration.respond_to?(:instance)
 end
 require 'capistrano'
 
+require File.join(File.dirname(__FILE__), %w(capistrano_extensions sys))
 require File.join(File.dirname(__FILE__), %w(capistrano_extensions invocation))
 require File.join(File.dirname(__FILE__), %w(capistrano_extensions files))
 require File.join(File.dirname(__FILE__), %w(capistrano_extensions service))
