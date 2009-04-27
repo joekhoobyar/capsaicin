@@ -6,6 +6,11 @@ module CapistranoExtensions
 
       STATUS_REGEX = /STATE +: +([0-9])+ +([^ ]+)/
 
+      # Check for the existance of a generic Windows NT service.
+      def windows?(id)
+        `sc query "#{id}"` !~ / FAILED /
+      end
+
       # Defines a recipe to control a generic Windows NT service.
       #
       def windows(id,*args)
