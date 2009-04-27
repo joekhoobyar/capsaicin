@@ -25,6 +25,9 @@ module CapistranoExtensions
       %w(executable? -x)
     ]
 
+    require File.join(File.dirname(__FILE__), %w(files local.rb))
+    require File.join(File.dirname(__FILE__), %w(files remote.rb))
+
     class_eval(Local.public_instance_methods(false).map do |m|
       "def #{m}(*f) send(_via.to_s + '_files').#{m}(*f) end"
     end.join("\n"))
@@ -34,8 +37,5 @@ module CapistranoExtensions
     end
   end
 end
-
-require File.join(File.dirname(__FILE__), %w(files local.rb))
-require File.join(File.dirname(__FILE__), %w(files remote.rb))
 
 Capistrano.plugin :files, CapistranoExtensions::Files

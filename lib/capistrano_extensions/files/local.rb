@@ -6,7 +6,7 @@ module CapistranoExtensions
 
       include FileUtils::Verbose
 
-      public *COMMANDS
+      public *COMMANDS.flatten
       public :pwd
 
       FILE_TESTS.each do |m,t|
