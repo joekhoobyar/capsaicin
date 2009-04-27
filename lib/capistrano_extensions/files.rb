@@ -1,3 +1,6 @@
+require File.join(File.dirname(__FILE__), %w(files local.rb))
+require File.join(File.dirname(__FILE__), %w(files remote.rb))
+
 module CapistranoExtensions::Files
 
   COMMANDS = [ %w(mkdir mkdir_p rmdir cp cp_r rm rm_r rm_rf
@@ -32,8 +35,5 @@ module CapistranoExtensions::Files
     @config.fetch(:files_via, :remote).to_sym != :local ? :remote : :local
   end
 end
-
-require File.join(File.dirname(__FILE__), %w(files local.rb))
-require File.join(File.dirname(__FILE__), %w(files remote.rb))
 
 Capistrano.plugin :files, CapistranoExtensions::Files
