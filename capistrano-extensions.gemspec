@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
     "lib/capistrano_extensions/files/remote.rb",
     "lib/capistrano_extensions/invocation.rb",
     "lib/capistrano_extensions/service.rb",
+    "lib/capistrano_extensions/service/command.rb",
     "lib/capistrano_extensions/service/crm.rb",
     "lib/capistrano_extensions/service/lsb.rb",
     "lib/capistrano_extensions/service/windows.rb",
