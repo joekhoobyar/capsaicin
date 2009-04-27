@@ -4,6 +4,23 @@ module CapistranoExtensions
   module Files
     module Remote
 
+      COMMANDS = [ %w(mkdir mkdir_p rmdir cp cp_r rm rm_r rm_rf
+                      chmod chmod_R chown chown_R touch),
+                  %w(ln ln_s ln_sf mv install) ]
+
+      COMMANDS.each_with_index do |l,n|
+        l.each do |k|
+          k, f = k.split('_')
+          f = ' -' + f if f
+          class_eval <<-EODEF
+            def #{k}(a, options={})
+              options = args.pop if Hash === args.last
+              _r '#{k}#{f}', args#{', ' + (n+1).to_s if n > 0}
+            end
+          EODEF
+        end
+      end
+
       def tail_f(file, n=10)
         cmd = "tail -n #{n} -f #{_q file}"
         _via == :system ? system(cmd) : stream(cmd, :via => _via)
@@ -29,111 +46,16 @@ module CapistranoExtensions
       end
 
       def pwd
-        capture("pwd", :via => _via)
+        capture('pwd', :via => _via)
       end
 
-      def mkdir(*args)
-        options = args.pop if Hash === args.last
-        _r 'mkdir', args
+      FILE_TESTS.each do |m,t|
+        class_eval <<-EODEF
+          def #{m}(a, options={})
+            _t "test #{t}", a
+          end
+        EODEF
       end
-
-      def mkdir_p(*args)
-        options = args.pop if Hash === args.last
-        _r 'mkdir -p', args
-      end
-
-      def rmdir(*args)
-        options = args.pop if Hash === args.last
-        _r 'rmdir', args
-      end
-
-      def ln(*args)
-        options = args.pop if Hash === args.last
-        _r 'ln', args, 2
-      end
-
-      def ln_s(*args)
-        options = args.pop if Hash === args.last
-        _r 'ln -s', args, 2
-      end
-
-      def ln_sf(*args)
-        options = args.pop if Hash === args.last
-        _r 'ln -sf', args, 2
-      end
-
-      def cp(*args)
-        options = args.pop if Hash === args.last
-        _r 'cp', args
-      end
-
-      def cp_r(*args)
-        options = args.pop if Hash === args.last
-        _r 'cp -r', args
-      end
-
-      def mv(*args)
-        options = args.pop if Hash === args.last
-        _r 'mv', args, 2
-      end
-
-      def rm(*args)
-        options = args.pop if Hash === args.last
-        _r 'rm', args
-      end
-
-      def rm_r(*args)
-        options = args.pop if Hash === args.last
-        _r 'rm -r', args
-      end
-
-      def rm_rf(*args)
-        options = args.pop if Hash === args.last
-        _r 'rm -rf', args
-      end
-
-      def install(*args)
-        options = args.pop if Hash === args.last
-        _r 'install', args, 2
-      end
-
-      def chmod(*args)
-        options = args.pop if Hash === args.last
-        _r 'chmod', args
-      end
-
-      def chmod_R(*args)
-        options = args.pop if Hash === args.last
-        _r 'chmod -R', args
-      end
-
-      def chown(*args)
-        options = args.pop if Hash === args.last
-        _r 'chown', args
-      end
-
-      def chown_R(*args)
-        options = args.pop if Hash === args.last
-        _r 'chown -R', args
-      end
-
-      def touch(*args)
-        options = args.pop if Hash === args.last
-        _r 'touch', args
-      end
-
-      def exists?(a)
-        _t "test -f", a
-      end
-
-      def directory?(a, options={:verbose=>false})
-        _t "test -d", a
-      end
-
-      def executable?(a, options={:verbose=>false})
-        _t "test -x", a
-      end
-
 
     private
 

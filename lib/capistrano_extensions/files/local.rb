@@ -4,6 +4,20 @@ module CapistranoExtensions
   module Files
     module Local
 
+      include FileUtils::Verbose
+
+      public *COMMANDS
+      public :pwd
+
+      FILE_TESTS.each do |m,t|
+        class_eval <<-EODEF
+          def #{m}(a, options={})
+            logger.trace "test #{t} \#{a.gsub ' ', '\\ '}" if logger 
+            File.#{m} a
+          end
+        EODEF
+      end
+
       def tail_f(file, n=10)
         unless defined? File::Tail::Logfile then gem 'file-tail'; require 'file/tail' end
         File::Tail::Logfile.tail(file, :backward=>n) do |line| puts line end
@@ -12,35 +26,20 @@ module CapistranoExtensions
       end
 
       def upload(from, to)
-        cp(from, to)
+        cp from, to
       end
 
       def download(from, to)
-        cp(from, to)
+        cp from, to
       end
 
-
-      include FileUtils::Verbose
-
-      public *FileUtils::Verbose.methods(false)
-      private *%w(copy_entry copy_file copy_stream
-                  remove_entry remove_entry_secure remove_file
-                  compare_file compare_stream
-                  uptodate?)
-
-      def exists?(a, options={})
-        $stdout.puts "[ -f #{_q a} ] ]"
-        File.exists? a
-      end
-
-      def directory?(a, options={})
-        $stdout.puts "[ -d #{_q a} ]"
-        File.directory? a
-      end
-
-      def executable?(a, options={})
-        $stdout.puts "[ -x #{_q a} ]"
-        File.executable? a
+      def cd(dir, options={})
+        if block_given?
+          dir, dir2 = pwd, dir
+          cd dir2
+          yield
+        end  
+        cd dir
       end
 
     end
