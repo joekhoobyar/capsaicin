@@ -29,7 +29,7 @@ module CapistranoExtensions
     require File.join(File.dirname(__FILE__), %w(files remote.rb))
 
     class_eval(Local.public_instance_methods(false).map do |m|
-      "def #{m}(*f) send(_via.to_s + '_files').#{m}(*f) end"
+      "def #{m}(*args, &block)\n  send(_via.to_s + '_files').#{m}(*args, &block)\nend"
     end.join("\n"))
 
     def _via
