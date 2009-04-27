@@ -13,7 +13,7 @@ module CapistranoExtensions
           k, f = k.split('_')
           f = ' -' + f if f
           class_eval <<-EODEF
-            def #{k}(args, options={})
+            def #{k}(*args)
               options = args.pop if Hash === args.last
               _r '#{k}#{f}', args#{', ' + (n+1).to_s if n > 0}
             end
