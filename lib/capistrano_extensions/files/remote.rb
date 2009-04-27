@@ -12,7 +12,7 @@ module CapistranoExtensions
         l.each do |k|
           k, f = k.split('_')
           f = ' -' + f if f
-          class_eval <<-EODEF
+          class_eval <<-EODEF, __FILE__, __LINE__
             def #{k}(*args)
               options = args.pop if Hash === args.last
               _r '#{k}#{f}', args#{', ' + (n+1).to_s if n > 0}

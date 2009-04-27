@@ -10,7 +10,7 @@ module CapistranoExtensions
       public :pwd
 
       FILE_TESTS.each do |m,t|
-        class_eval <<-EODEF
+        class_eval <<-EODEF, __FILE__, __LINE__
           def #{m}(a, options={})
             logger.trace "test #{t} \#{a.gsub ' ', '\\ '}" if logger 
             File.#{m} a

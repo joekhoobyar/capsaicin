@@ -30,7 +30,7 @@ module CapistranoExtensions
 
     class_eval(Local.public_instance_methods(false).map do |m|
       "def #{m}(*args, &block)\n  send(_via.to_s + '_files').#{m}(*args, &block)\nend"
-    end.join("\n"))
+    end.join("\n"), __FILE__, __LINE__)
 
     def _via
       @config.fetch(:files_via, :remote).to_sym != :local ? :remote : :local
