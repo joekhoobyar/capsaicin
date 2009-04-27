@@ -22,7 +22,7 @@ module CapistranoExtensions::Files
     %w(size? -s),
     %w(socket? -S),
     %w(sticky? -k),
-    %w(symlink? -h)
+    %w(symlink? -h),
     %w(writable? -w),
     %w(executable? -x)
   ]
