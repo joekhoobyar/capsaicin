@@ -9,11 +9,11 @@ module CapistranoExtensions
                   %w(ln ln_s ln_sf mv install) ]
 
       COMMANDS.each_with_index do |l,n|
-        l.each do |k|
-          k, f = k.split('_')
+        l.each do |m|
+          k, f = m.split('_')
           f = ' -' + f if f
           class_eval <<-EODEF, __FILE__, __LINE__
-            def #{k}(*args)
+            def #{m}(*args)
               options = args.pop if Hash === args.last
               _r '#{k}#{f}', args#{', ' + (n+1).to_s if n > 0}
             end
