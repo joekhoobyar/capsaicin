@@ -2,14 +2,15 @@ module CapistranoExtensions
   module Service
     module Windows
 
-      DEFAULT_ACTIONS = %w(status start stop restart)
+      DEFAULT_ACTIONS = [:start, :stop]
 
+      STATUS_REGEX = /STATE +: +([0-9])+ +([^ ]+)/
 
       # Defines a recipe to control a generic Windows NT service.
       #
       def windows(id,*args)
+        svc_name = id.to_s
         svc_desc = next_description(:reset)
-        svc_cmd = "net"
         svc_actions = DEFAULT_ACTIONS 
 
         if Hash === args.last
@@ -26,19 +27,34 @@ module CapistranoExtensions
         end
 
         namespace id do
-          desc "#{svc_desc}: #{SVC_ACTION_CAPTIONS[:status]}" if svc_desc
-          task :default, options do
-              sudo "#{svc_cmd} status \"#{id}\""
-          end
-
-          svc_actions.each do |svc_action|
-            svc_action = svc_action.intern
-            desc "#{svc_desc}: #{SVC_ACTION_CAPTIONS[svc_action]}" if svc_desc
-            task svc_action, options do
-              sudo "#{svc_cmd} #{svc_action} \"#{id}\""
+          [:default, :status].each do |k|
+            desc "#{svc_desc}: #{SVC_ACTION_CAPTIONS[:status]}" if svc_desc
+            task k, options do
+              output = `sc query "#{id}"`
+              if output =~ STATUS_REGEX
+                logger.trace "Service status: #{svc_name}: #{$2} (#{$1})" if logger
+              else
+                logger.error output if logger
+                abort "Failed to get service status for #{svc_name}"
+              end
             end
           end
 
+          DEFAULT_ACTIONS.each do |svc_action|
+            svc_action = svc_action.intern
+            desc "#{svc_desc}: #{SVC_ACTION_CAPTIONS[svc_action]}" if svc_desc
+            task svc_action, options do
+              system "net #{svc_action} \"#{id}\""
+            end
+          end
+
+          desc "#{svc_desc}: #{SVC_ACTION_CAPTIONS[:restart]}" if svc_desc
+          task :restart, options do
+            `sc query "#{id}"` =~ STATUS_REGEX
+            $1 == '4' or stop
+            start
+          end
+        
           instance_eval { yield } if block_given?
         end
       end

@@ -23,7 +23,7 @@ module CapistranoExtensions
         else
           options = {}
         end
-        svc_actions += args.shift if Array === args.first
+        svc_actions += args.pop if Array === args.last
 
         case args.first
         when String; id = args.shift.intern

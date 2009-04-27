@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{capistrano-extensions}
-  s.version = "0.0.4"
+  s.version = "0.0.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Joe Khoobyar"]
@@ -20,6 +20,9 @@ Gem::Specification.new do |s|
     "lib/capistrano_extensions/files/remote.rb",
     "lib/capistrano_extensions/invocation.rb",
     "lib/capistrano_extensions/service.rb",
+    "lib/capistrano_extensions/service/crm.rb",
+    "lib/capistrano_extensions/service/lsb.rb",
+    "lib/capistrano_extensions/service/windows.rb",
     "lib/jk_capistrano_extensions.rb"
   ]
   s.has_rdoc = true
