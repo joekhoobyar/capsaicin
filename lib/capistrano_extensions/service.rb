@@ -1,4 +1,5 @@
 module CapistranoExtensions
+
   module Service
 
     LSB_DEFAULT_ACTIONS = %w(status start stop restart)
@@ -104,6 +105,7 @@ module CapistranoExtensions
       end
     end
   end
+
 end
 
 Capistrano.plugin :service, CapistranoExtensions::Service

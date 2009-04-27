@@ -1,4 +1,5 @@
-module CapistranoExtension
+module CapistranoExtensions
+
   module Invocation
     def sudo_as(*args, &block)
       options = Hash===args.last ? args.pop.dup :  {}
@@ -21,6 +22,7 @@ module CapistranoExtension
       run *args.push(options), &block
     end
   end
-  Capistrano::Configuration.send :include, Invocation
-end
 
+  Capistrano::Configuration.send :include, Invocation
+
+end
