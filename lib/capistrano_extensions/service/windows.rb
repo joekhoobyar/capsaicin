@@ -46,7 +46,7 @@ module CapistranoExtensions
           end
 
           DEFAULT_ACTIONS.each do |svc_action|
-            svc_action = svc_action.intern
+            svc_action = svc_action.intern if String === svc_action
             desc "#{svc_desc}: #{SVC_ACTION_CAPTIONS[svc_action]}" if svc_desc
             task svc_action, options do
               system "net #{svc_action} \"#{id}\""

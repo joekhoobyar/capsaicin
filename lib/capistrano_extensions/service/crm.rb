@@ -69,7 +69,7 @@ module CapistranoExtensions
 
         namespace id do
           svc_actions.each do |svc_action,svc_args|
-            svc_action = svc_action.intern unless Symbol===svc_action
+            svc_action = svc_action.intern if String === svc_action
             desc "#{svc_desc}: #{SVC_ACTION_CAPTIONS[svc_action]}" if svc_desc
             task svc_action, options do
               sudo "#{svc_cmd} #{svc_args}"

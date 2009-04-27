@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
     "lib/capistrano_extensions/service/crm.rb",
     "lib/capistrano_extensions/service/lsb.rb",
     "lib/capistrano_extensions/service/windows.rb",
+    "lib/capistrano_extensions/sys.rb",
     "lib/jk_capistrano_extensions.rb"
   ]
   s.has_rdoc = true
