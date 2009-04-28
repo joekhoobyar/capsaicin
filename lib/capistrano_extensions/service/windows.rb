@@ -7,8 +7,9 @@ module CapistranoExtensions
       STATUS_REGEX = /STATE +: +([0-9])+ +([^ ]+)/
 
       # Check for the existance of a generic Windows NT service.
-      def windows?(id)
-        `sc query "#{id}"` !~ / FAILED /
+      def windows?(id, regex = / FAILED /)
+        logger.trace "executing locally: sc query \"#{id}\"" if logger
+        `sc query "#{id}"` !~ regex
       end
 
       # Defines a recipe to control a generic Windows NT service.
@@ -50,7 +51,7 @@ module CapistranoExtensions
 
           desc "#{svc_desc}: #{SVC_ACTION_CAPTIONS[:restart]}" if svc_desc
           task :restart, options do
-            `sc query "#{id}"` =~ STATUS_REGEX
+            windows? id, STATUS_REGEX
             $1 == '4' or stop
             start
           end
