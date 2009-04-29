@@ -4,10 +4,6 @@ module CapistranoExtensions
   module Files
     module Remote
 
-      COMMANDS = [ %w(mkdir mkdir_p rmdir cp cp_r rm rm_r rm_rf
-                      chmod chmod_R chown chown_R touch),
-                  %w(ln ln_s ln_sf mv install) ]
-
       COMMANDS.each_with_index do |l,n|
         l.each do |m|
           k, f = m.split('_')
@@ -19,6 +15,14 @@ module CapistranoExtensions
             end
           EODEF
         end
+      end
+
+      FILE_TESTS.each do |m,t|
+        class_eval <<-EODEF
+          def #{m}(a, options={})
+            _t "test #{t}", a
+          end
+        EODEF
       end
 
       def tail_f(file, n=10)
@@ -47,14 +51,6 @@ module CapistranoExtensions
 
       def pwd
         capture('pwd', :via => _via)
-      end
-
-      FILE_TESTS.each do |m,t|
-        class_eval <<-EODEF
-          def #{m}(a, options={})
-            _t "test #{t}", a
-          end
-        EODEF
       end
 
     private

@@ -40,7 +40,7 @@ module CapistranoExtensions
             svc_action = svc_action.intern if String === svc_action
             desc "#{svc_desc}: #{SVC_ACTION_CAPTIONS[svc_action]}" if svc_desc
             task svc_action, options do
-              system "net #{svc_action} \"#{id}\""
+              local_run "net #{svc_action} \"#{id}\""
             end
           end
 

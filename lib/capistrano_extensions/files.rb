@@ -1,7 +1,7 @@
 module CapistranoExtensions
   module Files
 
-    COMMANDS = [ %w(mkdir mkdir_p rmdir cp cp_r rm rm_r rm_rf
+    COMMANDS = [ %w(mkdir mkdir_p rmdir cp cp_r rm rm_f rm_r rm_rf
                     chmod chmod_R chown chown_R touch),
                 %w(ln ln_s ln_sf mv install) ]
 
