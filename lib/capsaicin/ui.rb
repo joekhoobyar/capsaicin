@@ -10,7 +10,7 @@ module Capsaicin
       end
     end
     
-    Capistrano::CLI::UI::ClassMethods.class_eval do
+    Capistrano::CLI.class_eval do
       alias :password_prompt_console :password_prompt
       include AskPass
       alias :password_prompt_askpass :password_prompt
