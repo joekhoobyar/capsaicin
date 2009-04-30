@@ -30,7 +30,7 @@ Rake::RDocTask.new(:rdoc) do |rdoc|
     '--title' << "Capsaicin" <<
     '--charset' << 'utf-8'
   rdoc.rdoc_dir = "doc"
-  rdoc.rdoc_files.include 'README'
+  rdoc.rdoc_files.include 'README*'
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
