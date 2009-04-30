@@ -15,8 +15,8 @@ begin
     s.authors = ["Joe Khoobyar"]
     s.email = "joe@ankhcraft.com"
 
-    s.add_dependency 'capistrano'
-    s.add_dependency 'archive-tar-minitar'
+    s.add_dependency 'capistrano', ['>= 2.0']
+    s.add_dependency 'archive-tar-minitar', ['>= 0.5']
   end
 rescue LoadError
   puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
