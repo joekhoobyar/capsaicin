@@ -43,14 +43,14 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<capistrano>, [">= 0"])
-      s.add_runtime_dependency(%q<archive-tar-minitar>, [">= 0"])
+      s.add_runtime_dependency(%q<capistrano>, [">= 2.0"])
+      s.add_runtime_dependency(%q<archive-tar-minitar>, [">= 0.5"])
     else
-      s.add_dependency(%q<capistrano>, [">= 0"])
-      s.add_dependency(%q<archive-tar-minitar>, [">= 0"])
+      s.add_dependency(%q<capistrano>, [">= 2.0"])
+      s.add_dependency(%q<archive-tar-minitar>, [">= 0.5"])
     end
   else
-    s.add_dependency(%q<capistrano>, [">= 0"])
-    s.add_dependency(%q<archive-tar-minitar>, [">= 0"])
+    s.add_dependency(%q<capistrano>, [">= 2.0"])
+    s.add_dependency(%q<archive-tar-minitar>, [">= 0.5"])
   end
 end
