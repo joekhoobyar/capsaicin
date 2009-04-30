@@ -29,7 +29,8 @@ Gem::Specification.new do |s|
     "lib/capsaicin/service/crm.rb",
     "lib/capsaicin/service/lsb.rb",
     "lib/capsaicin/service/windows.rb",
-    "lib/capsaicin/sys.rb"
+    "lib/capsaicin/sys.rb",
+    "lib/capsaicin/ui.rb"
   ]
   s.has_rdoc = true
   s.homepage = %q{http://github.com/joekhoobyar/capsaicin}
