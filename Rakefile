@@ -7,10 +7,10 @@ require 'rake/testtask'
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |s|
-    s.name = "capistrano-extensions"
-    s.homepage = "http://github.com/joekhoobyar/capistrano-extensions"
-    s.summary = "Joe Khoobyar's Capistrano Extensions"
-    s.description = %Q{Various capistrano extensions}
+    s.name = "capsaicin"
+    s.homepage = "http://github.com/joekhoobyar/capsaicin"
+    s.summary = "Joe Khoobyar's spicy capistrano extensions"
+    s.description = %Q{Spicy capistrano extensions for various needs}
 
     s.authors = ["Joe Khoobyar"]
     s.email = "joe@ankhcraft.com"
@@ -27,7 +27,7 @@ desc "Generate RDoc documentation"
 Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.options << '--line-numbers' << '--inline-source' <<
     '--main' << 'README' <<
-    '--title' << "Joe Khoobyar's Capistrano Extensions" <<
+    '--title' << "Capsaicin" <<
     '--charset' << 'utf-8'
   rdoc.rdoc_dir = "doc"
   rdoc.rdoc_files.include 'README'

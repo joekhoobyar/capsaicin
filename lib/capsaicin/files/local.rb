@@ -1,6 +1,6 @@
 require 'fileutils'
 
-module CapistranoExtensions
+module Capsaicin
   module Files
     module Local
 
@@ -46,4 +46,4 @@ module CapistranoExtensions
   end
 end
 
-Capistrano.plugin :local_files, CapistranoExtensions::Files::Local
+Capistrano.plugin :local_files, Capsaicin::Files::Local

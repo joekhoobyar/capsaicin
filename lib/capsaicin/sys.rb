@@ -1,4 +1,4 @@
-module CapistranoExtensions
+module Capsaicin
   module LocalSys
 
     def windows?

@@ -1,4 +1,4 @@
-module CapistranoExtensions
+module Capsaicin
 
   module Invocation
     def local_run(*args, &block)

@@ -1,4 +1,4 @@
-module CapistranoExtensions
+module Capsaicin
 
   module Service
 
@@ -18,4 +18,4 @@ module CapistranoExtensions
 
 end
 
-Capistrano.plugin :service, CapistranoExtensions::Service
+Capistrano.plugin :service, Capsaicin::Service

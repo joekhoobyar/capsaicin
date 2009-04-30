@@ -1,4 +1,4 @@
-module CapistranoExtensions
+module Capsaicin
   module Files
 
     COMMANDS = [ %w(mkdir mkdir_p rmdir cp cp_r rm rm_f rm_r rm_rf
@@ -38,4 +38,4 @@ module CapistranoExtensions
   end
 end
 
-Capistrano.plugin :files, CapistranoExtensions::Files
+Capistrano.plugin :files, Capsaicin::Files

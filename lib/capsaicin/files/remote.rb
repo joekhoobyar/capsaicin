@@ -1,6 +1,6 @@
 require 'fileutils'
 
-module CapistranoExtensions
+module Capsaicin
   module Files
     module Remote
 
@@ -106,4 +106,4 @@ module CapistranoExtensions
   end
 end
 
-Capistrano.plugin :remote_files, CapistranoExtensions::Files::Remote
+Capistrano.plugin :remote_files, Capsaicin::Files::Remote
