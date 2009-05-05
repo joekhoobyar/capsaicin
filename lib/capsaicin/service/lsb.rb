@@ -4,9 +4,9 @@ module Capsaicin
 
       DEFAULT_ACTIONS = %w(status start stop restart)
 
-      # Check for the existance of a generic Windows NT service.
-      def lsb?(id)
-        files.exists? "/etc/init.d/#{id.to_s.split(':').last}"
+      # Check for the existance of a generic LSB initscript.
+      def lsb?(id, basedir="/etc/init.d")
+        files.exists? "#{basedir}/#{id.to_s.split(':').last}"
       end
 
       # Defines a recipe to control a generic LSB service.
@@ -14,6 +14,7 @@ module Capsaicin
       def lsb(id,*args)
         options = Hash===args.last ? args.pop : {}
 
+        basedir = options.delete(:basedir) || '/etc/init.d'
         svc_name = id.to_s
         svc_desc = next_description(:reset) || (svc_name.capitalize unless options.delete(:hide))
         svc_actions = DEFAULT_ACTIONS 
@@ -24,7 +25,7 @@ module Capsaicin
           when String; id = args.shift.intern
           when Symbol; id = args.shift
           end
-          svc_cmd = "/etc/init.d/#{id.to_s.split(':').last}"
+          svc_cmd = "#{basedir}/#{id.to_s.split(':').last}"
 
           desc "#{svc_desc}: #{SVC_ACTION_CAPTIONS[:status]}" if svc_desc
           task :default, options do
