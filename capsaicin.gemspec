@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{capsaicin}
-  s.version = "0.1.1"
+  s.version = "0.1.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Joe Khoobyar"]
-  s.date = %q{2009-04-30}
+  s.date = %q{2009-05-07}
   s.description = %q{Spicy capistrano extensions for various needs}
   s.email = %q{joe@ankhcraft.com}
   s.extra_rdoc_files = [
