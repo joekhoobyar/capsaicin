@@ -14,7 +14,7 @@ module Capsaicin
       def lsb(id,*args)
         options = Hash===args.last ? args.pop : {}
 
-        basedir = options.delete(:basedir) || '/etc/init.d'
+        basedir = options.delete(:basedir)
         svc_name = id.to_s
         svc_desc = next_description(:reset) || (svc_name.capitalize unless options.delete(:hide))
         svc_actions = DEFAULT_ACTIONS 
@@ -25,18 +25,18 @@ module Capsaicin
           when String; id = args.shift.intern
           when Symbol; id = args.shift
           end
-          svc_cmd = "#{basedir}/#{id.to_s.split(':').last}"
+          svc_cmd = "#{basedir || '/etc/init.d'}/#{id.to_s.split(':').last}"
 
           desc "#{svc_desc}: #{SVC_ACTION_CAPTIONS[:status]}" if svc_desc
           task :default, options do
-              sudo "#{svc_cmd} status"
+              send(basedir ? run_method : :sudo, "#{svc_cmd} status")
           end
 
           svc_actions.each do |svc_action|
             svc_action = svc_action.intern if String === svc_action
             desc "#{svc_desc}: #{SVC_ACTION_CAPTIONS[svc_action]}" if svc_desc
             task svc_action, options do
-              sudo "#{svc_cmd} #{svc_action}"
+              send(basedir ? run_method : :sudo, "#{svc_cmd} #{svc_action}")
             end
           end
 
