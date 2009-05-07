@@ -27,17 +27,32 @@ module Capsaicin
 
       def tail_f(file, n=10)
         cmd = "tail -n #{n} -f #{_q file}"
-        _via == :system ? local_run(cmd) : stream(cmd, :via => _via)
+        case v = _via
+        when :system, :local_run
+          send v, cmd
+        else
+          stream cmd, :via => v
+        end
       rescue Interrupt
         logger.trace "interrupted (Ctrl-C)" if logger
       end
 
       def upload(*args)
-        _via == :system ? cp(*args) : @config.upload(*args)
+        case _via
+        when :system, :local_run
+          cp(*args)
+        else
+          @config.upload(*args)
+        end
       end
 
       def download(*args)
-        _via == :system ? cp(*args) : @config.download(*args)
+        case _via
+        when :system, :local_run
+          cp(*args)
+        else
+          @config.download(*args)
+        end
       end
 
       def cd(dir, options={})
@@ -50,7 +65,7 @@ module Capsaicin
       end
 
       def pwd
-        capture('pwd', :via => _via)
+        capture 'pwd', :via => _via
       end
 
     private
@@ -92,14 +107,7 @@ module Capsaicin
       end
 
       def _via
-        case (v = @config.fetch(:files_via, nil))
-        when :local
-          :system
-        when :remote, NilClass
-          @config.fetch(:run_method, nil)
-        else 
-          v
-        end
+        @config.fetch(:run_method, nil)
       end
 
     end

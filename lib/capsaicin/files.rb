@@ -25,6 +25,8 @@ module Capsaicin
       %w(executable? -x)
     ]
 
+    LOCAL_RUN_METHODS = [:system, :local_run]
+
     require File.join(File.dirname(__FILE__), %w(files local.rb))
     require File.join(File.dirname(__FILE__), %w(files remote.rb))
 
@@ -33,7 +35,11 @@ module Capsaicin
     end.join("\n"), __FILE__, __LINE__)
 
     def _via
-      @config.fetch(:files_via, :remote).to_sym != :local ? :remote : :local
+      if LOCAL_RUN_METHODS.include? @config.fetch(:run_method, nil)
+        :local
+      else
+        :remote
+      end
     end
   end
 end
