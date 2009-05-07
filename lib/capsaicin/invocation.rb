@@ -1,25 +1,40 @@
 module Capsaicin
 
   module Invocation
+
+    # Capistrano's system() override is only available from the base deployment strategy.
+    # Also, we could do with a few more windows checks.
     def local_run(*args, &block)
       args.pop if Hash===args.last
-      args = args.first
-      logger.debug "executing locally: #{args}"
-      system args
+      cmd = args.join(' ')
+      if RUBY_PLATFORM =~ /win32|mingw|mswin/
+        cmd.gsub!('/','\\') # Replace / with \\
+        cmd.gsub!(/^cd /,'cd /D ') # Replace cd with cd /D
+        cmd.gsub!(/&& cd /,'&& cd /D ') # Replace cd with cd /D
+        logger.trace "executing locally: #{cmd}"
+        Kernel.system cmd
+      else
+        logger.trace "executing locally: #{cmd}"
+        Kernel.system cmd
+      end
     end
     
+    # Always uses :runner to sudo as someone. 
+    # Equivalent to:  sudo "command", :as => fetch(:runner,nil)
     def sudo_as(*args, &block)
       options = Hash===args.last ? args.pop.dup :  {}
       options[:as] = fetch(:runner, nil)
       sudo *args.push(options), &block
     end
     
+    # Extremely helpful if you only have permission to: sudo su SOMEUSER -c "command"
     def sudo_su(*args, &block)
       options = Hash===args.last ? args.pop.dup :  {}
       args[0] = "su #{fetch(:runner, nil)} -c '#{args[0]}'"
       sudo *args.push(options), &block
     end
     
+    # Extremely helpful if you only have permission to: sudo su - SOMEUSER
     def sudo_su_to(*args, &block)
       options = Hash===args.last ? args.pop.dup :  {}
       options[:shell] = false
