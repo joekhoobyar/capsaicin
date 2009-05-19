@@ -17,6 +17,25 @@ module Capsaicin
         end
       end
 
+      def chmod(mode, list, options={})
+        _r 'chmod', Array(list).unshift(mode.to_s(8))
+      end
+
+      def chmod_R(mode, list, options={})
+        _r 'chmod -R', Array(list).unshift(mode.to_s(8))
+      end
+
+      def install(src, dest, options={})
+        src = Array(src)
+        case options[:mode]
+        when Fixnum
+          src << '-m' << options[:mode].to_s(8)
+        when String
+          src << '-m' << options[:mode]
+        end
+        _r 'install', src.push(dest)
+      end
+
       FILE_TESTS.each do |m,t|
         class_eval <<-EODEF
           def #{m}(a, options={})
