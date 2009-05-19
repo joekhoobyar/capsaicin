@@ -103,7 +103,7 @@ module Capsaicin
       end
 
       def _q(*list)
-        list.map { |l| "'#{l.gsub("'", "\\'")}'" }.join ' '
+        list.map { |l| "'#{l.to_s.gsub("'", "\\'")}'" }.join ' '
       end
 
       def _via
