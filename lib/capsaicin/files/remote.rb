@@ -87,6 +87,21 @@ module Capsaicin
         capture 'pwd', :via => _via
       end
 
+      def tar_c(dest, src, options={}, &filter)
+        filter and abort "tar_c: remote mode does not support a filtering proc"
+        _r 'tar -cf', Array(src).unshift(dest)
+      end
+
+      def tar_cz(dest, src, options={}, &filter)
+        filter and abort "tar_cz: remote mode does not support a filtering proc"
+        _r 'tar -czf', Array(src).unshift(dest)
+      end
+
+      def tar_cj(dest, src, options={}, &filter)
+        filter and abort "tar_cj: remote mode does not support a filtering proc"
+        _r 'tar -cjf', Array(src).unshift(dest)
+      end
+
     private
 
       def _t(cmd, args=nil, min=nil)

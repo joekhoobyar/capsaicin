@@ -42,6 +42,42 @@ module Capsaicin
         cd dir
       end
 
+      def tar_c(dest, src, options={}, &filter)
+        logger and
+          logger.trace "tar -cf #{dest} " + Array(src).map { |s| s.gsub ' ', '\\ ' }.join(' ')
+        _tar File.open(dest, 'wb'), src, v, &filter
+      end
+
+      def tar_cz(dest, src, options={}, &filter)
+        require 'zlib' unless defined? Zlib::GzipWriter
+        logger and
+          logger.trace "tar -czf #{dest} " + Array(src).map { |s| s.gsub ' ', '\\ ' }.join(' ')
+        _tar Zlib::GzipWriter.new(File.open(dest, 'wb')), src, options, &filter
+      end
+
+    private
+
+      def _tar(os, src, options, &filter)
+        verbose = options[:v] || options[:verbose]
+        require 'find' unless defined? Find
+        unless defined? Archive::Tar::Minitar
+          require 'archive/tar/minitar'
+        end
+        minitar = Archive::Tar::Minitar
+
+        minitar::Output.open os do |outp|
+          Array(src).each do |path|
+            Find.find(path) do |entry|
+              if filter and filter[entry]
+                Find.prune if File.directory? entry
+              else
+                logger.trace " + #{entry}" if verbose
+                minitar.pack_file entry, outp
+              end
+            end
+          end
+        end
+      end
     end
   end
 end
