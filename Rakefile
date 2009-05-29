@@ -14,6 +14,7 @@ begin
 
     s.authors = ["Joe Khoobyar"]
     s.email = "joe@ankhcraft.com"
+    s.rubyforge_project = "capsaicin"
 
     s.add_dependency 'capistrano', ['>= 2.0']
     s.add_dependency 'archive-tar-minitar', ['>= 0.5']
@@ -21,6 +22,34 @@ begin
 rescue LoadError
   puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
 end
+
+# These are new tasks
+begin
+  require 'rake/contrib/sshpublisher'
+  namespace :rubyforge do
+
+    desc "Release gem and RDoc documentation to RubyForge"
+    task :release => ["rubyforge:release:gem", "rubyforge:release:docs"]
+
+    namespace :release do
+      desc "Publish RDoc to RubyForge."
+      task :docs => [:rdoc] do
+        config = YAML.load(
+            File.read(File.expand_path('~/.rubyforge/user-config.yml'))
+        )
+
+        host = "#{config['username']}@rubyforge.org"
+        remote_dir = "/var/www/gforge-projects/capsaicin/"
+        local_dir = 'rdoc'
+
+        Rake::SshDirPublisher.new(host, remote_dir, local_dir).upload
+      end
+    end
+  end
+rescue LoadError
+  puts "Rake SshDirPublisher is unavailable or your rubyforge environment is not configured."
+end
+
 
 # ---------  RDoc Documentation ---------
 desc "Generate RDoc documentation"
