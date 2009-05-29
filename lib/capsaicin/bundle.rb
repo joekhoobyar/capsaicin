@@ -1,5 +1,6 @@
 module Capsaicin
-  module Bundle
+  
+  module Bundle   # :nodoc:
     
   end
 

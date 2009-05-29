@@ -34,7 +34,8 @@ module Capsaicin
       "def #{m}(*args, &block)\n  send(_via.to_s + '_files').#{m}(*args, &block)\nend"
     end.join("\n"), __FILE__, __LINE__)
 
-    def _via
+    
+    def _via  # :nodoc:
       if LOCAL_RUN_METHODS.include? @config.fetch(:run_method, nil)
         :local
       else
