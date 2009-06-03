@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{capsaicin}
-  s.version = "0.1.4"
+  s.version = "0.1.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Joe Khoobyar"]
-  s.date = %q{2009-05-29}
+  s.date = %q{2009-06-03}
   s.description = %q{Spicy capistrano extensions for various needs}
   s.email = %q{joe@ankhcraft.com}
   s.extra_rdoc_files = [
@@ -36,7 +36,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{capsaicin}
-  s.rubygems_version = %q{1.3.3}
+  s.rubygems_version = %q{1.3.4}
   s.summary = %q{Joe Khoobyar's spicy capistrano extensions}
 
   if s.respond_to? :specification_version then

@@ -45,7 +45,7 @@ module Capsaicin
       def tar_c(dest, src, options={}, &filter)
         logger and
           logger.trace "tar -cf #{dest} " + Array(src).map { |s| s.gsub ' ', '\\ ' }.join(' ')
-        _tar File.open(dest, 'wb'), src, v, &filter
+        _tar File.open(dest, 'wb'), src, options, &filter
       end
 
       def tar_cz(dest, src, options={}, &filter)
@@ -55,16 +55,22 @@ module Capsaicin
         _tar Zlib::GzipWriter.new(File.open(dest, 'wb')), src, options, &filter
       end
 
+      def tar_t(src, options={}, &block)
+        logger and logger.trace "tar -tf #{src}"
+        _lstar File.open(dest, 'wb'), src, options, &filter
+      end
+
+      def tar_tz(src, options={}, &block)
+        require 'zlib' unless defined? Zlib::GzipWriter
+        logger and logger.trace "tar -tzf #{dest}"
+        _lstar Zlib::GzipReader.new(File.open(dest, 'rb')), options, &block
+      end
+
     private
 
       def _tar(os, src, options, &filter)
         verbose = options[:v] || options[:verbose]
-        require 'find' unless defined? Find
-        unless defined? Archive::Tar::Minitar
-          require 'archive/tar/minitar'
-        end
-        minitar = Archive::Tar::Minitar
-
+        minitar = _minitar
         minitar::Output.open os do |outp|
           Array(src).each do |path|
             Find.find(path) do |entry|
@@ -77,6 +83,45 @@ module Capsaicin
             end
           end
         end
+      end
+      
+      def _untar(is, dest, files=[], options={}, &callback)
+        verbose = options[:v] || options[:verbose]
+        minitar = _minitar
+        minitar::Input.open is do |inp|
+          if File.exist?(dest) and ! File.directory?(dest)
+            raise "Can't unpack to a non-directory."
+          elsif ! File.exist? dest
+            FileUtils.mkdir_p dest
+          end
+          inp.each do |entry|
+            logger.trace " - #{entry}" if verbose
+            if files.empty? or files.include?(entry.full_name)
+              inp.extract_entry(dest, entry, &callback)
+            end
+          end
+        end
+      end
+
+      def _lstar(is, options={}, &block)
+        verbose = options[:v] || options[:verbose]
+        files, minitar = [], _minitar
+        minitar::Input.open is do |inp|
+          inp.each do |entry|
+            if block.nil? then files << entry else
+              f = block[entry]
+              files << f unless f.nil?
+            end
+            logger.trace " - #{entry}" if verbose
+          end
+        end
+        files
+      end
+
+      def _minitar
+        require 'find' unless defined? Find
+        require 'archive/tar/minitar' unless defined? Archive::Tar::Minitar
+        Archive::Tar::Minitar
       end
     end
   end
