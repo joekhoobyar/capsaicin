@@ -38,7 +38,7 @@ module Capsaicin
             svc_action = svc_action.intern if String === svc_action
             desc "#{svc_desc}: #{SVC_ACTION_CAPTIONS[svc_action]}" if svc_desc
             task svc_action, options do
-              _run_method = basedir ? fetch(:run_method, :sudo) : :sudo
+              _run_method = basedir ? fetch(:run_method, :run) : :sudo
               send(_run_method, "#{svc_cmd} #{svc_action}")
             end
           end
