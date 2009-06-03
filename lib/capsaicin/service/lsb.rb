@@ -22,24 +22,25 @@ module Capsaicin
 
         namespace id do
           svc_id = Symbol === id ? id.to_s : id.split(':').last
-          svc_cmd = case basedir
-                    when String; basedir + '/' + svc_id
-                    when NilClass; '/etc/init.d' + svc_id
-                    when Symbol; fetch(basedir) + '/' + svc_id
-                    when Proc; basedir.call + '/' + svc_id
-                    end
 
           desc "#{svc_desc}: #{SVC_ACTION_CAPTIONS[:status]}" if svc_desc
           task :default, options do
             status
           end
-
+          svc_cmd = Proc.new do
+            case basedir
+            when String; basedir + '/' + svc_id
+            when NilClass; '/etc/init.d/' + svc_id
+            when Symbol; fetch(basedir) + '/' + svc_id
+            when Proc; basedir.call(svc_id)
+            end
+          end
           svc_actions.each do |svc_action|
             svc_action = svc_action.intern if String === svc_action
             desc "#{svc_desc}: #{SVC_ACTION_CAPTIONS[svc_action]}" if svc_desc
             task svc_action, options do
               _run_method = basedir ? fetch(:run_method, :run) : :sudo
-              send(_run_method, "#{svc_cmd} #{svc_action}")
+              send(_run_method, "#{svc_cmd.call} #{svc_action}")
             end
           end
 
