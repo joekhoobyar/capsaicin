@@ -79,7 +79,7 @@ module Capsaicin
         when :system, :local_run
           FileUtils::Verbose.copy_stream StringIO.new(from), to
         else
-          @config.put(*args)
+          @config.put(from, to)
         end
       end
 
