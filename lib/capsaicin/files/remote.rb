@@ -104,17 +104,17 @@ module Capsaicin
 
       def tar_t(src, options={}, &filter)
         filter and abort "tar_t: remote mode does not support a filtering proc"
-        _r 'tar -tf', [src]
+        _t 'tar -tf', [src]
       end
 
       def tar_tz(src, options={}, &filter)
         filter and abort "tar_tz: remote mode does not support a filtering proc"
-        _r 'tar -tzf', [src]
+        _t 'tar -tzf', [src]
       end
 
       def tar_tj(src, options={}, &filter)
         filter and abort "tar_tj: remote mode does not support a filtering proc"
-        _r 'tar -tjf', [src]
+        _t 'tar -tjf', [src]
       end
 
 
