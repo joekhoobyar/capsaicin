@@ -33,6 +33,10 @@ module Capsaicin
         cp from, to
       end
 
+      def put(from, to)
+        copy_stream StringIO.new(from), to
+      end
+
       def cd(dir, options={})
         if block_given?
           dir, dir2 = pwd, dir

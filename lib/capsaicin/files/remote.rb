@@ -73,6 +73,15 @@ module Capsaicin
           @config.download(*args)
         end
       end
+      
+      def put(from, to)
+        case _via
+        when :system, :local_run
+          FileUtils::Verbose.copy_stream StringIO.new(from), to
+        else
+          @config.put(*args)
+        end
+      end
 
       def cd(dir, options={})
         if block_given?
