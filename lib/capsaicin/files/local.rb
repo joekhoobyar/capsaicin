@@ -57,7 +57,7 @@ module Capsaicin
 
       def tar_t(src, options={}, &block)
         logger and logger.trace "tar -tf #{src}"
-        _lstar File.open(dest, 'wb'), src, options, &filter
+        _lstar File.open(dest, 'wb'), src, options, &block
       end
 
       def tar_tz(src, options={}, &block)
