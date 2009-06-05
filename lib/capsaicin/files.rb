@@ -44,5 +44,3 @@ module Capsaicin
     end
   end
 end
-
-Capistrano.plugin :files, Capsaicin::Files

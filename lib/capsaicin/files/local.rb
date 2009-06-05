@@ -141,5 +141,3 @@ module Capsaicin
     end
   end
 end
-
-Capistrano.plugin :local_files, Capsaicin::Files::Local

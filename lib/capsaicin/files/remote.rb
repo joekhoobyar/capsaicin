@@ -203,5 +203,3 @@ module Capsaicin
     end
   end
 end
-
-Capistrano.plugin :remote_files, Capsaicin::Files::Remote
