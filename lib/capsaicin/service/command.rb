@@ -14,7 +14,7 @@ module Capsaicin
 
         svc_name = id.to_s
         svc_desc = next_description(:reset) || (svc_name.capitalize unless options.delete(:hide))
-        extras = args.pop if Array === args.last
+        extras = options.delete(:extras) || {}
         via = options.delete(:via)
 
         namespace id do
@@ -29,10 +29,19 @@ module Capsaicin
             send(via || fetch(:run_method, :local_run), stop)
           end
 
-          desc "#{svc_desc}: #{SVC_ACTION_CAPTIONS[:restart]}" if svc_desc
-          task :restart, options do
-            stop
-            start
+          unless extras.key? :restart
+	          desc "#{svc_desc}: #{SVC_ACTION_CAPTIONS[:restart]}" if svc_desc
+	          task :restart, options do
+	            stop
+	            start
+	          end
+	        end
+         
+          extras.each do |k,cmd|
+	          desc "#{svc_desc}: #{SVC_ACTION_CAPTIONS[k]}" if svc_desc
+	          task k, options do
+	            send(via || fetch(:run_method, :local_run), cmd)
+	          end
           end
         
           instance_eval { yield } if block_given?
