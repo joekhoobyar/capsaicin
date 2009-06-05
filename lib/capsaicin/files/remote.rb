@@ -56,12 +56,20 @@ module Capsaicin
         logger.trace "interrupted (Ctrl-C)" if logger
       end
 
-      def upload(*args)
+      def upload(from, to, options={}, &block)
         case _via
         when :system, :local_run
-          cp(*args)
+          cp from, to
         else
-          @config.upload(*args)
+          if via.to_s[0,4] == 'sudo'
+            to2, to = to, "/tmp/#{File.basename to}-#{Time.now.utc.to_i.to_s}"
+          end
+          @config.upload(from, to, options, &block)
+          if to2
+            chmod 0644, to
+            cp to, to2
+            rm_f to
+          end
         end
       end
 
@@ -74,12 +82,20 @@ module Capsaicin
         end
       end
       
-      def put(from, to)
+      def put(data, path, options={})
         case _via
         when :system, :local_run
           FileUtils::Verbose.copy_stream StringIO.new(from), to
         else
-          @config.put(from, to)
+          if via.to_s[0,4] == 'sudo'
+            path2, path = path, "/tmp/#{File.basename path}-#{Time.now.utc.to_i.to_s}"
+          end
+          @config.put(data, path, options)
+          if to2
+            chmod 0644, path
+            cp path, path2
+            rm_f path
+          end
         end
       end
 
@@ -109,6 +125,21 @@ module Capsaicin
       def tar_cj(dest, src, options={}, &filter)
         filter and abort "tar_cj: remote mode does not support a filtering proc"
         _r 'tar -cjf', Array(src).unshift(dest)
+      end
+
+      def tar_x(dest, options={}, &filter)
+        filter and abort "tar_x: remote mode does not support a filtering proc"
+        _r 'tar -xf', [dest]
+      end
+
+      def tar_xz(dest, options={}, &filter)
+        filter and abort "tar_xz: remote mode does not support a filtering proc"
+        _r 'tar -xzf', [dest]
+      end
+
+      def tar_xj(dest, src, options={}, &filter)
+        filter and abort "tar_xj: remote mode does not support a filtering proc"
+        _r 'tar -xjf', Array(src).unshift(dest)
       end
 
       def tar_t(src, options={}, &filter)

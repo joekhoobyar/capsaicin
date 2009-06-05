@@ -70,6 +70,17 @@ module Capsaicin
         _lstar Zlib::GzipReader.new(File.open(src, 'rb')), options, &block
       end
 
+      def tar_x(src, options={}, &block)
+        logger and logger.trace "tar -xf #{src}"
+        _untar File.open(src, 'wb'), options, &block
+      end
+
+      def tar_xz(src, options={}, &block)
+        require 'zlib' unless defined? Zlib::GzipWriter
+        logger and logger.trace "tar -xzf #{src}"
+        _untar Zlib::GzipReader.new(File.open(src, 'rb')), options, &block
+      end
+
     private
 
       def _tar(os, src, options, &filter)
