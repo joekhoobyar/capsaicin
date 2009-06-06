@@ -61,7 +61,7 @@ module Capsaicin
         when :system, :local_run
           cp from, to
         else
-          to2, to = to, "/tmp/#{File.basename to}-#{Time.now.utc.to_i}" if via.to_s[0,4] == 'sudo'
+          to2, to = to, "/tmp/#{File.basename to}-#{Time.now.utc.to_i}" if _via.to_s[0,4] == 'sudo'
           @config.upload(from, to, options, &block)
           if to2
             run "chmod 0644 #{to}"
