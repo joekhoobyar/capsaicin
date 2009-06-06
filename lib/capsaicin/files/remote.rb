@@ -62,8 +62,13 @@ module Capsaicin
           cp from, to
         else
           if _via.to_s[0,4] == 'sudo'
-            tof = File.basename((to[-1]==?/ || to[-1]==?\ || directory?(to)) ? from : to)
-            to2, to = to, "/tmp/#{tof}-#{Time.now.utc.to_i}"
+            if to[-1]==?/ || to[-1]==?\ || directory?(to)
+              tof = File.basename from
+              to2, to = "#{to}/#{tof}", "/tmp/#{tof}-#{Time.now.utc.to_i}"
+            else
+              tof = File.basename to
+              to2, to = to, "/tmp/#{tof}-#{Time.now.utc.to_i}"
+            end
           end
           @config.upload(from, to, options, &block)
           if to2
@@ -89,8 +94,13 @@ module Capsaicin
           FileUtils::Verbose.copy_stream StringIO.new(from), to
         else
           if _via.to_s[0,4] == 'sudo'
-            pathf = File.basename((path[-1]==?/ || path[-1]==?\ || directory?(path)) ? from : path)
-            path2, path = path, "/tmp/#{pathf}-#{Time.now.utc.path_i}"
+            if path[-1]==?/ || path[-1]==?\ || directory?(path)
+              pathf = File.basename from
+              path2, path = "#{path}/#{pathf}", "/tmp/#{pathf}-#{Time.now.utc.path_i}"
+            else
+              pathf = File.basename path
+              path2, path = path, "/tmp/#{pathf}-#{Time.now.utc.path_i}"
+            end
           end
           @config.put(data, path, options)
           if path2
