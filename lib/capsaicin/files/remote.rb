@@ -95,8 +95,7 @@ module Capsaicin
         else
           if _via.to_s[0,4] == 'sudo'
             if path[-1]==?/ || path[-1]==?\ || directory?(path)
-              pathf = File.basename from
-              path2, path = "#{path}/#{pathf}", "/tmp/#{pathf}-#{Time.now.utc.to_i}"
+              abort "Target path is a directory!"
             else
               pathf = File.basename path
               path2, path = path, "/tmp/#{pathf}-#{Time.now.utc.to_i}"
