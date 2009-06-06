@@ -3,13 +3,15 @@ unless Capistrano::Configuration.respond_to?(:instance)
 end
 require 'capistrano'
 
+module Capsaicin; end
+
 require File.join(File.dirname(__FILE__), %w(capsaicin sys))
 require File.join(File.dirname(__FILE__), %w(capsaicin invocation))
 require File.join(File.dirname(__FILE__), %w(capsaicin files))
 require File.join(File.dirname(__FILE__), %w(capsaicin service))
 require File.join(File.dirname(__FILE__), %w(capsaicin ui))
 
-Capistrano::Configuration.send :include, Invocation
+Capistrano::Configuration.send :include, Capsaicin::Invocation
 
 Capistrano.plugin :files, Capsaicin::Files
 Capistrano.plugin :local_files, Capsaicin::Files::Local
