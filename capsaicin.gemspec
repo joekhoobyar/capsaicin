@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{capsaicin}
-  s.version = "0.1.5"
+  s.version = "0.1.6"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Joe Khoobyar"]
-  s.date = %q{2009-06-03}
+  s.date = %q{2009-06-06}
   s.description = %q{Spicy capistrano extensions for various needs}
   s.email = %q{joe@ankhcraft.com}
   s.extra_rdoc_files = [
@@ -30,7 +30,9 @@ Gem::Specification.new do |s|
     "lib/capsaicin/service/lsb.rb",
     "lib/capsaicin/service/windows.rb",
     "lib/capsaicin/sys.rb",
-    "lib/capsaicin/ui.rb"
+    "lib/capsaicin/ui.rb",
+    "test/helper.rb",
+    "test/test_local_files.rb"
   ]
   s.homepage = %q{http://github.com/joekhoobyar/capsaicin}
   s.rdoc_options = ["--charset=UTF-8"]
@@ -38,6 +40,10 @@ Gem::Specification.new do |s|
   s.rubyforge_project = %q{capsaicin}
   s.rubygems_version = %q{1.3.4}
   s.summary = %q{Joe Khoobyar's spicy capistrano extensions}
+  s.test_files = [
+    "test/helper.rb",
+    "test/test_local_files.rb"
+  ]
 
   if s.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
