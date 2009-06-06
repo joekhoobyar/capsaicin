@@ -2,6 +2,14 @@ module Capsaicin
 
   module Invocation
 
+    # Automatically uses the :run_method variable to run things.
+    # Equivalent to +invoke_command *args, :via=>fetch(:run_method, :run)+
+    def vrun(*args, &block)
+      options = Hash===args.last ? args.pop.dup :  {}
+      options[:via] = fetch(:run_method, :run)
+      invoke_command *args.push(options), &block
+    end
+
     # Capistrano's system() override is only available from the base deployment strategy.
     # Also, we could do with a few more windows checks.
     def local_run(*args, &block)
