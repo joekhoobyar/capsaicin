@@ -43,6 +43,4 @@ module Capsaicin
       run *args.push(options), &block
     end
   end
-
-  Capistrano::Configuration.send :include, Invocation
 end

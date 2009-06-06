@@ -9,6 +9,8 @@ require File.join(File.dirname(__FILE__), %w(capsaicin files))
 require File.join(File.dirname(__FILE__), %w(capsaicin service))
 require File.join(File.dirname(__FILE__), %w(capsaicin ui))
 
+Capistrano::Configuration.send :include, Invocation
+
 Capistrano.plugin :files, Capsaicin::Files
 Capistrano.plugin :local_files, Capsaicin::Files::Local
 Capistrano.plugin :remote_files, Capsaicin::Files::Remote
