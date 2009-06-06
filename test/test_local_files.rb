@@ -1,5 +1,6 @@
 require 'test/unit'
 require 'helper'
+require 'tmpdir'
 require 'capsaicin/files'
 require 'capsaicin/files/local'
 
@@ -26,6 +27,15 @@ class TestLocalFiles < Test::Unit::TestCase
   
   def test_not_readable
     assert ! @local.readable?(__FILE__+'/nope')
+  end
+  
+  def test_writable
+    assert @local.writable?(Dir.tmpdir)
+    assert_equal "test -w #{Dir.tmpdir}", @local.logbuf.string.strip
+  end
+  
+  def test_not_writable
+    assert ! @local.writable?(__FILE__+'/nope')
   end
   
   def test_file

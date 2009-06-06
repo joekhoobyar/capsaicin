@@ -61,14 +61,12 @@ module Capsaicin
         when :system, :local_run
           cp from, to
         else
-          if via.to_s[0,4] == 'sudo'
-            to2, to = to, "/tmp/#{File.basename to}-#{Time.now.utc.to_i.to_s}"
-          end
+          to2, to = to, "/tmp/#{File.basename to}-#{Time.now.utc.to_i}" if via.to_s[0,4] == 'sudo'
           @config.upload(from, to, options, &block)
           if to2
-            chmod 0644, to
+            run "chmod 0644 #{to}"
             cp to, to2
-            rm_f to
+            run "rm -f #{to}"
           end
         end
       end
@@ -87,14 +85,12 @@ module Capsaicin
         when :system, :local_run
           FileUtils::Verbose.copy_stream StringIO.new(from), to
         else
-          if _via.to_s[0,4] == 'sudo'
-            path2, path = path, "/tmp/#{File.basename path}-#{Time.now.utc.to_i.to_s}"
-          end
+          path2, path = path, "/tmp/#{File.basename path}-#{Time.now.utc.to_i}" if _via.to_s[0,4] == 'sudo'
           @config.put(data, path, options)
-          if to2
-            chmod 0644, path
+          if path2
+            run "chmod 0644 #{path}"
             cp path, path2
-            rm_f path
+            run "rm -f #{path}"
           end
         end
       end
