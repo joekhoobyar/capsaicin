@@ -87,7 +87,7 @@ module Capsaicin
         when :system, :local_run
           FileUtils::Verbose.copy_stream StringIO.new(from), to
         else
-          if via.to_s[0,4] == 'sudo'
+          if _via.to_s[0,4] == 'sudo'
             path2, path = path, "/tmp/#{File.basename path}-#{Time.now.utc.to_i.to_s}"
           end
           @config.put(data, path, options)
