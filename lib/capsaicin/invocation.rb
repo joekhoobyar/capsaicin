@@ -10,6 +10,22 @@ module Capsaicin
       invoke_command *args.push(options), &block
     end
 
+    # Automatically uses the :run_method variable to run things.
+    # Equivalent to +capture *args, :via=>fetch(:run_method, :run)+
+    def vcapture(*args, &block)
+      options = Hash===args.last ? args.pop.dup :  {}
+      options[:via] = fetch(:run_method, :run)
+      capture *args.push(options), &block
+    end
+
+    # Automatically uses the :run_method variable to run things.
+    # Equivalent to +stream *args, :via=>fetch(:run_method, :run)+
+    def vstream(*args, &block)
+      options = Hash===args.last ? args.pop.dup :  {}
+      options[:via] = fetch(:run_method, :run)
+      stream *args.push(options), &block
+    end
+
     # Capistrano's system() override is only available from the base deployment strategy.
     # Also, we could do with a few more windows checks.
     def local_run(*args, &block)
