@@ -62,7 +62,7 @@ module Capsaicin
           cp from, to
         else
           if _via.to_s[0,4] == 'sudo'
-            if to[-1]==?/ || to[-1]==?\ || directory?(to)
+            if to[-1]==?/ || to[-1]==?\\ || directory?(to)
               tof = File.basename from
               to2, to = "#{to}/#{tof}", "/tmp/#{tof}-#{Time.now.utc.to_i}"
             else
@@ -94,7 +94,7 @@ module Capsaicin
           FileUtils::Verbose.copy_stream StringIO.new(from), to
         else
           if _via.to_s[0,4] == 'sudo'
-            if path[-1]==?/ || path[-1]==?\ || directory?(path)
+            if path[-1]==?/ || path[-1]==?\\ || directory?(path)
               abort "Target path is a directory!"
             else
               pathf = File.basename path
