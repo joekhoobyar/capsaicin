@@ -2,6 +2,12 @@
 
 Joe Khoobyar's spicy capistrano extensions.
 
+== Project website(s)
+
+http://capsaicin.rubyforge.com
+http://rubyforge.com/projects/capsaicin
+http://github.com/joekhoobyar/capsaicin
+
 == Copyright
 
 Copyright (c) 2009 Joe Khoobyar. See LICENSE for details.
