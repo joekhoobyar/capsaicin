@@ -3,6 +3,10 @@ unless Capistrano::Configuration.respond_to?(:instance)
 end
 require 'capistrano'
 
+unless Symbol.method_defined? :intern
+  Symbol.class_eval { def intern; self end }
+end
+
 module Capsaicin; end
 
 require File.join(File.dirname(__FILE__), %w(capsaicin sys))
