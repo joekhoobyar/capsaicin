@@ -17,5 +17,3 @@ module Capsaicin
   end
 
 end
-
-Capistrano.plugin :service, Capsaicin::Service

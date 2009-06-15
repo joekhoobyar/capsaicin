@@ -6,6 +6,4 @@ module Capsaicin
     end
 
   end
-
-  Capistrano.plugin :local_sys, LocalSys
 end
