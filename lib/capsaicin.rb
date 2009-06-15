@@ -12,8 +12,8 @@ require File.join(File.dirname(__FILE__), %w(capsaicin files))
 require File.join(File.dirname(__FILE__), %w(capsaicin service))
 require File.join(File.dirname(__FILE__), %w(capsaicin ui))
 
-Capistrano::Namespaces.send :include, Capsaicin::Namespace
 Capistrano::Configuration.send :include, Capsaicin::Invocation
+Capistrano::Configuration::Namespaces::Namespace.send :include, Capsaicin::Namespace
 
 Capistrano.plugin :local_sys, Capsaicin::LocalSys
 Capistrano.plugin :service, Capsaicin::Service

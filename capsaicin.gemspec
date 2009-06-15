@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{capsaicin}
-  s.version = "0.1.6"
+  s.version = "0.1.7"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Joe Khoobyar"]
-  s.date = %q{2009-06-06}
+  s.date = %q{2009-06-15}
   s.description = %q{Spicy capistrano extensions for various needs}
   s.email = %q{joe@ankhcraft.com}
   s.extra_rdoc_files = [
@@ -24,6 +24,7 @@ Gem::Specification.new do |s|
     "lib/capsaicin/files/local.rb",
     "lib/capsaicin/files/remote.rb",
     "lib/capsaicin/invocation.rb",
+    "lib/capsaicin/namespace.rb",
     "lib/capsaicin/service.rb",
     "lib/capsaicin/service/command.rb",
     "lib/capsaicin/service/crm.rb",
