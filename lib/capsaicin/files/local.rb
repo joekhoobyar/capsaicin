@@ -47,15 +47,13 @@ module Capsaicin
       end
 
       def tar_c(dest, src, options={}, &filter)
-        logger and
-          logger.trace "tar -cf #{dest} " + Array(src).map { |s| s.gsub ' ', '\\ ' }.join(' ')
+        logger and logger.trace "tar -cf #{dest} #{Array(src).map{|s| s.gsub ' ', '\\ '}.join(' ')}"
         _tar File.open(dest, 'wb'), src, options, &filter
       end
 
       def tar_cz(dest, src, options={}, &filter)
         require 'zlib' unless defined? Zlib::GzipWriter
-        logger and
-          logger.trace "tar -czf #{dest} " + Array(src).map { |s| s.gsub ' ', '\\ ' }.join(' ')
+        logger and logger.trace "tar -czf #{dest} #{Array(src).map{|s| s.gsub ' ', '\\ ' }.join(' ')}"
         _tar Zlib::GzipWriter.new(File.open(dest, 'wb')), src, options, &filter
       end
 

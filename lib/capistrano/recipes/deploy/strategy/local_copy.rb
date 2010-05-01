@@ -1,4 +1,5 @@
 require 'capistrano/recipes/deploy/strategy/base'
+require 'tempfile'
 
 module Capistrano
   module Deploy
@@ -7,17 +8,21 @@ module Capistrano
 
         def deploy!
           logger.debug "compressing local copy to #{filename}"
-          local_files.tar_cz filename, '.', :verbose=>true do |item|
-            name = File.basename item
-            name == "." || name == ".." || copy_exclude.any?{|p| File.fnmatch(p, item)}
+          local_files.tar_cz filename, '.', :verbose=>false do |item|
+            if (item=item[2..-1]) and item.length > 0
+              name = File.basename item
+              name == "." || name == ".." || copy_prune.include?(name) ||
+                copy_exclude.any?{|p| File.fnmatch(p, item, File::FNM_DOTMATCH)} ||
+                (! File.directory?(item) && copy_directory_only.any?{|p| item[0,p.length+1]==p+'/'})
+            end
           end
-
-          #File.open(File.join(destination, "REVISION"), "w") { |f| f.puts(revision) }
           files.upload filename, remote_filename
-          #files.tar_xz remote_filename, configuration[:releases_path], :verbose=>true
-          #run "cd #{configuration[:releases_path]} && #{decompress(remote_filename).join(" ")} && rm #{remote_filename}"
+          begin
+            files.tar_xz remote_filename, configuration[:releases_path], :verbose=>true
+          ensure
+            files.rm_f remote_filename rescue nil
+          end
         ensure
-          files.rm_f remote_filename rescue nil
           FileUtils.rm filename rescue nil
           FileUtils.rm_rf destination rescue nil
         end
@@ -32,15 +37,19 @@ module Capistrano
           end
 
           def copy_exclude
-            @copy_exclude ||= Array(configuration.fetch(:copy_exclude, %w(log .svn .git)))
+            @copy_exclude ||= Array(configuration.fetch(:copy_exclude, %w(.*)))
+          end
+
+          def copy_prune
+            @copy_prune ||= Array(configuration.fetch(:copy_exclude, %w(.svn .git)))
           end
 
           def copy_directory_only
-            @copy_directory_only ||= Array(configuration.fetch(:copy_directory_only, %w(tmp)))
+            @copy_directory_only ||= Array(configuration.fetch(:copy_directory_only, %w(log tmp)))
           end
 
           def filename
-            @filename ||= File.join(tmpdir, "#{configuration.fetch(:application, 'local_copy')}.tgz")
+            @filename ||= File.join(Dir.tmpdir, "#{configuration.fetch(:application, 'local_copy')}.tgz")
           end
 
           def remote_dir
