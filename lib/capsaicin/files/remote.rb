@@ -138,19 +138,19 @@ module Capsaicin
         _r 'tar -cjf', Array(src).unshift(dest)
       end
 
-      def tar_x(dest, options={}, &filter)
+      def tar_x(src, options={}, &filter)
         filter and abort "tar_x: remote mode does not support a filtering proc"
-        _r 'tar -xf', [dest]
+        _r "tar #{'-C '+_q(options[:chdir]) if options[:chdir]} -xf", [src]
       end
 
-      def tar_xz(dest, options={}, &filter)
+      def tar_xz(src, options={}, &filter)
         filter and abort "tar_xz: remote mode does not support a filtering proc"
-        _r 'tar -xzf', [dest]
+        _r "tar #{'-C '+_q(options[:chdir]) if options[:chdir]} -xzf", [src]
       end
 
-      def tar_xj(dest, src, options={}, &filter)
+      def tar_xj(src, options={}, &filter)
         filter and abort "tar_xj: remote mode does not support a filtering proc"
-        _r 'tar -xjf', Array(src).unshift(dest)
+        _r "tar #{'-C '+_q(options[:chdir]) if options[:chdir]} -xjf", [src]
       end
 
       def tar_t(src, options={}, &filter)
@@ -167,7 +167,6 @@ module Capsaicin
         filter and abort "tar_tj: remote mode does not support a filtering proc"
         _t 'tar -tjf', [src]
       end
-
 
     private
 

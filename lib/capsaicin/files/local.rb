@@ -70,13 +70,13 @@ module Capsaicin
 
       def tar_x(src, options={}, &block)
         logger and logger.trace "tar -xf #{src}"
-        _untar File.open(src, 'wb'), options, &block
+        _untar File.open(src, 'wb'), options[:chdir]||'.', options, &block
       end
 
       def tar_xz(src, options={}, &block)
         require 'zlib' unless defined? Zlib::GzipWriter
         logger and logger.trace "tar -xzf #{src}"
-        _untar Zlib::GzipReader.new(File.open(src, 'rb')), options, &block
+        _untar Zlib::GzipReader.new(File.open(src, 'rb')), options[:chdir]||'.', options, &block
       end
 
     private
