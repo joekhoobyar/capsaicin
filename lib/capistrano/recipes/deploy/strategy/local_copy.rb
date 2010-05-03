@@ -18,7 +18,8 @@ module Capistrano
           end
           files.upload filename, remote_filename
           begin
-            files.tar_xz remote_filename, :chdir=>configuration[:releases_path], :verbose=>true
+            files.mkdir_p configuration[:release_path]
+            files.tar_xz remote_filename, :chdir=>configuration[:release_path], :verbose=>true
           ensure
             files.rm_f remote_filename rescue nil
           end
