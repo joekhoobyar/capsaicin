@@ -58,6 +58,21 @@ class Capsaicin::InvocationTest < Test::Unit::TestCase
     assert_equal [%w(uptime)], @ext.invocations[:sudo].last
   end
 
+  def test_sudo_without_override
+    @ext.sudo 'uptime'
+    assert_equal [%w(uptime)], @ext.invocations[:sudo].last
+  end
+
+  def test_sudo_with_override
+    @ext.set :override_sudo_method, :sudo_as
+    @ext.set :override_sudo_runner, :admin
+    @ext.sudo 'uptime'
+    assert_equal [%w(uptime) << {:as=>:admin}], @ext.invocations[:sudo].last
+    @ext.set :override_sudo_method, :sudo_su_to
+    @ext.sudo 'uptime'
+    assert_equal [["echo \"uptime\" | sudo su - admin", {:shell=>false}]], @ext.invocations[:run].last
+  end
+
 private
 
   def check_run_methods(method,key)
