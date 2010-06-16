@@ -28,8 +28,8 @@ module Capistrano # :nodoc:
           FileUtils.rm_rf destination rescue nil
         end
 
-        def check! # :nodoc:
-        end
+        #def check! # :nodoc:
+        #end
 
         private
 
