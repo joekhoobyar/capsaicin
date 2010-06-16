@@ -136,6 +136,10 @@ module Capsaicin
         require 'archive/tar/minitar' unless defined? Archive::Tar::Minitar
         Archive::Tar::Minitar
       end
+      
+      def fu_output_message(msg)
+        logger.trace msg if logger
+      end
     end
   end
 end
