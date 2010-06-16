@@ -1,4 +1,5 @@
 require 'stringio'
+require 'test/unit'
 require 'rubygems'
 require 'capistrano/logger'
 

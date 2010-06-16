@@ -24,7 +24,7 @@ end
 
 require 'rake/testtask'
 Rake::TestTask.new(:test) do |test|
-  test.libs << 'lib' << 'test'
+  test.libs << 'test'
   test.pattern = 'test/**/*_test.rb'
   test.verbose = true
 end
@@ -43,19 +43,6 @@ rescue LoadError
 end
 
 # ---------  RDoc Documentation ---------
-desc "Generate RDoc documentation"
-Rake::RDocTask.new(:rdoc) do |rdoc|
-  rdoc.options << '--line-numbers' << '--inline-source' <<
-    '--main' << 'README.rdoc' <<
-    '--title' << "Capsaicin" <<
-    '--charset' << 'utf-8'
-  rdoc.rdoc_dir = "doc"
-  rdoc.rdoc_files.include 'README*'
-  rdoc.rdoc_files.include('lib/**/*.rb')
-end
-
-task :default => :build
-
 Jeweler::GemcutterTasks.new
 Jeweler::RubyforgeTasks.new do |rubyforge|
   rubyforge.doc_task = "rdoc"
@@ -65,7 +52,7 @@ end
 task :default => :test
 
 require 'rake/rdoctask'
-Rake::RDocTask.new do |rdoc|
+Rake::RDocTask.new(:rdoc) do |rdoc|
   if File.exist?('VERSION.yml')
     config = YAML.load(File.read('VERSION.yml'))
     version = "#{config[:major]}.#{config[:minor]}.#{config[:patch]}"
@@ -76,7 +63,7 @@ Rake::RDocTask.new do |rdoc|
     '--main' << 'README.rdoc' <<
     '--charset' << 'utf-8'
 
-  rdoc.rdoc_dir = 'rdoc'
+  rdoc.rdoc_dir = 'doc'
   rdoc.title = "Capsaicin #{version}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
