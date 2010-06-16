@@ -17,6 +17,14 @@ module Capsaicin
         end
       end
 
+      FILE_TESTS.each do |m,t|
+        class_eval <<-EODEF
+          def #{m}(a, options={})
+            _t "test #{t}", a
+          end
+        EODEF
+      end
+
       def chmod(mode, list, options={})
         _r 'chmod', Array(list).unshift(mode.to_s(8))
       end
@@ -36,14 +44,6 @@ module Capsaicin
         _r 'install', src.push(dest)
       end
 
-      FILE_TESTS.each do |m,t|
-        class_eval <<-EODEF
-          def #{m}(a, options={})
-            _t "test #{t}", a
-          end
-        EODEF
-      end
-
       def tail_f(file, n=10)
         cmd = "tail -n #{n} -f #{_q file}"
         case v = _via
@@ -54,6 +54,15 @@ module Capsaicin
         end
       rescue Interrupt
         logger.trace "interrupted (Ctrl-C)" if logger
+      end
+
+      def put(data, path, options={})
+        case _via
+        when :system, :local_run
+          FileUtils::Verbose.copy_stream StringIO.new(from), to
+        else
+          upload StringIO.new(data), path, options
+        end
       end
 
       def upload(from, to, options={}, &block)
@@ -70,13 +79,19 @@ module Capsaicin
               to2, to = to, "/tmp/#{tof}-#{Time.now.utc.to_i}"
             end
           end
+	        options = options.dup
+	        mode = options.delete(:mode)
           @config.upload(from, to, options, &block)
           if to2
             begin
-	            run "chmod 0644 #{path}", :via=>:run
-	            cp path, path2
+	            run "chmod 0644 #{to}", :via=>:run
+	            cp to, to2
+	            if mode
+		            mode = mode.is_a?(Numeric) ? '0'+mode.to_s(8) : mode.to_s
+		            run "chmod #{mode} #{to2}"
+		          end
 	          ensure
-	            run "rm -f #{path}", :via=>:run
+	            run "rm -f #{to}", :via=>:run
 	          end
           end
         end
@@ -91,31 +106,6 @@ module Capsaicin
         end
       end
       
-      def put(data, path, options={})
-        case _via
-        when :system, :local_run
-          FileUtils::Verbose.copy_stream StringIO.new(from), to
-        else
-          if _via.to_s[0,4] == 'sudo'
-            if path[-1]==?/ || path[-1]==?\\ || directory?(path)
-              abort "Target path is a directory!"
-            else
-              pathf = File.basename path
-              path2, path = path, "/tmp/#{pathf}-#{Time.now.utc.to_i}"
-            end
-          end
-          @config.put(data, path, options)
-          if path2
-            begin
-	            run "chmod 0644 #{path}", :via=>:run
-	            cp path, path2
-	          ensure
-	            run "rm -f #{path}", :via=>:run
-	          end
-          end
-        end
-      end
-
       def cd(dir, options={})
         if block_given?
           dir, dir2 = pwd, dir
