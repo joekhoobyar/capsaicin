@@ -12,11 +12,12 @@ module Capsaicin
     # Allows overriding the default behavior of +run+ by setting
     # :override_run_method and (optionally) :override_runner
 		def run_with_override(cmd, options={}, &block)
-      if :run == (via = fetch(:override_run_method, :run))
+		  via = options[:via] || fetch(:override_run_method, :run)
+      if cmd.include?(sudo) or :run == via
         run_without_override cmd, options, &block
       else
         options = options.dup
-        options[:as] ||= as if as = fetch(:override_runner, nil)
+        as = fetch(:override_runner, nil) and options[:as] ||= as
 	      send via, cmd, options, &block
 	    end
 		end
@@ -25,9 +26,10 @@ module Capsaicin
     # :override_sudo_method and (optionally) :override_sudo_runner
 		def sudo_with_override(*args, &block)
       options = Hash===args.last ? args.pop.dup : {}
-      options[:as] ||= as if as = fetch(:override_sudo_runner, nil)
+      as = fetch(:override_sudo_runner, nil) and options[:as] ||= as
       args << options unless options.empty?
       if :sudo == (via = fetch(:override_sudo_method, :sudo))
+        options[:via] = :run
 	      sudo_without_override *args, &block
       else
 	      send via, *args, &block
@@ -99,7 +101,7 @@ module Capsaicin
       return sudo_as(options, &block) if args.empty?   # compatibility with capistrano's +sudo+
       options[:shell] = false
       cmd     = args[0].gsub(/[$\\`"]/) { |m| "\\#{m}" }
-      args[0] = "echo \"#{cmd}\" | #{sudo} su - #{options.delete(:as)}"
+      args[0] = "echo \"#{cmd}\" | #{sudo_without_override} su - #{options.delete(:as)}"
       run_without_override *args.push(options), &block
     end
   end
