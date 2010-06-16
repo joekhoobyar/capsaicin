@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{capsaicin}
-  s.version = "0.1.9"
+  s.version = "0.1.10"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Joe Khoobyar"]
-  s.date = %q{2010-06-15}
+  s.date = %q{2010-06-16}
   s.description = %q{Spicy capistrano extensions for various needs}
   s.email = %q{joe@ankhcraft.com}
   s.extra_rdoc_files = [
@@ -39,6 +39,7 @@ Gem::Specification.new do |s|
      "lib/capsaicin/sys.rb",
      "lib/capsaicin/ui.rb",
      "test/capsaicin/files/local_test.rb",
+     "test/capsaicin/invocation_test.rb",
      "test/helper.rb"
   ]
   s.homepage = %q{http://github.com/joekhoobyar/capsaicin}
@@ -49,6 +50,7 @@ Gem::Specification.new do |s|
   s.summary = %q{Joe Khoobyar's spicy capistrano extensions}
   s.test_files = [
     "test/capsaicin/files/local_test.rb",
+     "test/capsaicin/invocation_test.rb",
      "test/helper.rb"
   ]
 
@@ -57,14 +59,14 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<capistrano>, [">= 2.0"])
+      s.add_runtime_dependency(%q<capistrano>, [">= 2.5"])
       s.add_runtime_dependency(%q<archive-tar-minitar>, [">= 0.5"])
     else
-      s.add_dependency(%q<capistrano>, [">= 2.0"])
+      s.add_dependency(%q<capistrano>, [">= 2.5"])
       s.add_dependency(%q<archive-tar-minitar>, [">= 0.5"])
     end
   else
-    s.add_dependency(%q<capistrano>, [">= 2.0"])
+    s.add_dependency(%q<capistrano>, [">= 2.5"])
     s.add_dependency(%q<archive-tar-minitar>, [">= 0.5"])
   end
 end
