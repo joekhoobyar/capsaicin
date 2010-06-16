@@ -22,7 +22,7 @@ class CapistranoMock
     @logger
   end
 
-  %w(invoke_command capture stream).each do |k|
+  %w(invoke_command capture stream run).each do |k|
     class_eval %Q{
   def #{k}(*args, &block)
     args = [args]
@@ -30,6 +30,13 @@ class CapistranoMock
     ((@invocations ||= {})[:#{k}] ||= []) << args
   end
 }
+  end
+
+  def sudo(*args, &block)
+    return 'sudo' if args.empty?
+    args = [args]
+    args << block if block
+    ((@invocations ||= {})[:sudo] ||= []) << args
   end
 
 end
