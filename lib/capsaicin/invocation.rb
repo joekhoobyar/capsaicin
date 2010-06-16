@@ -51,11 +51,11 @@ module Capsaicin
       sudo *args.push(options), &block
     end
     
-    # Extremely helpful if you only have permission to: sudo su SOMEUSER -c "command"
+    # Extremely helpful if you only have permission to: sudo su SOMEUSER -c 'command'
     def sudo_su(*args, &block)
       options = Hash===args.last ? args.pop.dup : {}
       as      = options.delete(:as) || fetch(:runner, nil)
-      args[0] = "su #{as} -c '#{args[0]}'"
+      args[0] = "su #{as} -c '#{args[0].gsub("'","'\"'\"'")}'"
       sudo *args.push(options), &block
     end
     
