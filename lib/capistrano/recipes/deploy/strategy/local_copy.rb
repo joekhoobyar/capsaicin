@@ -28,9 +28,6 @@ module Capistrano # :nodoc:
           FileUtils.rm_rf destination rescue nil
         end
 
-        #def check! # :nodoc:
-        #end
-
         private
 
           def local_copy_dir # :nodoc:
