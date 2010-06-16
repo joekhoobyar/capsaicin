@@ -72,9 +72,9 @@ module Capsaicin
           end
           @config.upload(from, to, options, &block)
           if to2
-            run "chmod 0644 #{to}"
+            run "chmod 0644 #{to}", :via=>:run
             cp to, to2
-            run "rm -f #{to}"
+            run "rm -f #{to}", :via=>:run
           end
         end
       end
@@ -103,9 +103,9 @@ module Capsaicin
           end
           @config.put(data, path, options)
           if path2
-            run "chmod 0644 #{path}"
+            run "chmod 0644 #{path}", :via=>:run
             cp path, path2
-            run "rm -f #{path}"
+            run "rm -f #{path}", :via=>:run
           end
         end
       end
