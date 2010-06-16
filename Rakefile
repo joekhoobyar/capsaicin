@@ -15,7 +15,7 @@ begin
     s.email = "joe@ankhcraft.com"
     s.rubyforge_project = "capsaicin"
 
-    s.add_dependency 'capistrano', ['>= 2.0']
+    s.add_dependency 'capistrano', ['>= 2.5']
     s.add_dependency 'archive-tar-minitar', ['>= 0.5']
   end
 rescue LoadError
