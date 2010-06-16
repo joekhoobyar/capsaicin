@@ -13,30 +13,31 @@ class Capsaicin::InvocationTest < Test::Unit::TestCase
   end
 
   def test_vrun
-    @ext.vrun 'uptime'
-    assert_equal [%w(uptime) << {:via=>:run}], @ext.invocations[:invoke_command].last
-    @ext.vrun 'uptime', :via=>:sudo
-    assert_equal [%w(uptime) << {:via=>:sudo}], @ext.invocations[:invoke_command].last
-    @ext.vrun('uptime', &p=Proc.new{})
-    assert_equal [%w(uptime) << {:via=>:run}, p], @ext.invocations[:invoke_command].last
+    check_run_methods :vrun, :invoke_command
   end
     
-  def test_capture
-    @ext.vcapture 'uptime'
-    assert_equal [%w(uptime) << {:via=>:run}], @ext.invocations[:capture].last
-    @ext.vcapture 'uptime', :via=>:sudo
-    assert_equal [%w(uptime) << {:via=>:sudo}], @ext.invocations[:capture].last
-    @ext.vcapture('uptime', &p=Proc.new{})
-    assert_equal [%w(uptime) << {:via=>:run}, p], @ext.invocations[:capture].last
+  def test_vcapture
+    check_run_methods :vcapture, :capture
   end
     
-  def test_stream
-    @ext.vstream 'uptime'
-    assert_equal [%w(uptime) << {:via=>:run}], @ext.invocations[:stream].last
-    @ext.vstream 'uptime', :via=>:sudo
-    assert_equal [%w(uptime) << {:via=>:sudo}], @ext.invocations[:stream].last
-    @ext.vstream('uptime', &p=Proc.new{})
-    assert_equal [%w(uptime) << {:via=>:run}, p], @ext.invocations[:stream].last
+  def test_vstream
+    check_run_methods :vstream, :stream
   end
-    
+
+private
+
+  def check_run_methods(method,key)
+    [:run, :sudo].each do |via|
+	    @ext.send method, 'uptime'
+	    assert_equal [%w(uptime) << {:via=>via}], @ext.invocations[key].last
+	    @ext.set :run_method, :sudo
+	  end
+    [:sudo, :run].each do |via|
+	    @ext.send method, 'uptime', &p=Proc.new{}
+	    assert_equal [%w(uptime) << {:via=>via}, p], @ext.invocations[key].last
+	    @ext.unset :run_method
+    end
+    @ext.send method, 'uptime', :via=>:sudo
+    assert_equal [%w(uptime) << {:via=>:sudo}], @ext.invocations[key].last
+  end    
 end
