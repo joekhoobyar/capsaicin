@@ -91,5 +91,7 @@ private
     end
     @ext.send method, cmd, :as=>:busybody
     assert_equal [p[cmd,:busybody]], @ext.invocations[key].last
+    @ext.send method, :as=>:busybody
+    assert_equal [[{:as=>:busybody}]], @ext.invocations[:sudo].last
   end    
 end

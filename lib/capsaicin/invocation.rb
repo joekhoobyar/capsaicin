@@ -15,7 +15,8 @@ module Capsaicin
       if :run == (via = fetch(:override_run_method, :run))
         run_without_override cmd, options, &block
       else
-        options = options.merge(:as=>as) if as = fetch(:override_runner, nil)
+        options = options.dup
+        options[:as] ||= as if as = fetch(:override_runner, nil)
 	      send via, cmd, options, &block
 	    end
 		end
@@ -85,18 +86,20 @@ module Capsaicin
     # Extremely helpful if you only have permission to: sudo su SOMEUSER -c 'command'
     def sudo_su(*args, &block)
       options = Hash===args.last ? args.pop.dup : {}
-      as      = options.delete(:as) || fetch(:runner, nil)
-      args[0] = "su #{as} -c '#{args[0].gsub("'","'\"'\"'")}'"
+      options[:as] ||= fetch(:runner, nil)
+      return sudo_as(options, &block) if args.empty?   # compatibility with capistrano's +sudo+
+      args[0] = "su #{options.delete(:as)} -c '#{args[0].gsub("'","'\"'\"'")}'"
       sudo_without_override *args.push(options), &block
     end
     
     # Extremely helpful if you only have permission to: sudo su - SOMEUSER
     def sudo_su_to(*args, &block)
       options = Hash===args.last ? args.pop.dup : {}
+      options[:as] ||= fetch(:runner, nil)
+      return sudo_as(options, &block) if args.empty?   # compatibility with capistrano's +sudo+
       options[:shell] = false
       cmd     = args[0].gsub(/[$\\`"]/) { |m| "\\#{m}" }
-      as      = options.delete(:as) || fetch(:runner, nil)
-      args[0] = "echo \"#{cmd}\" | #{sudo} su - #{as}"
+      args[0] = "echo \"#{cmd}\" | #{sudo} su - #{options.delete(:as)}"
       run_without_override *args.push(options), &block
     end
   end
