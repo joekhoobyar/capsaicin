@@ -1,7 +1,38 @@
 module Capsaicin
 
   module Invocation
-
+    
+    def self.included(base)
+      [:run, :sudo].each do |k|
+	      base.send :alias_method, :"#{k}_without_override", k
+	      base.send :alias_method, k, :"#{k}_with_override"
+      end
+    end
+    
+    # Allows overriding the default behavior of +run+ by setting
+    # :override_run_method and (optionally) :override_runner
+		def run_with_override(cmd, options={}, &block)
+      if :run == (via = fetch(:override_run_method, :run))
+        run_without_override cmd, options, &block
+      else
+        options = options.merge(:as=>as) if as = fetch(:override_runner, nil)
+	      send via, cmd, options, &block
+	    end
+		end
+    
+    # Allows overriding the default behavior of +sudo+ by setting
+    # :override_sudo_method and (optionally) :override_sudo_runner
+		def sudo_with_override(*args, &block)
+      options = Hash===args.last ? args.pop.dup : {}
+      options[:as] ||= as if as = fetch(:override_sudo_runner, nil)
+      args << options unless options.empty?
+      if :sudo == (via = fetch(:override_sudo_method, :sudo))
+	      sudo_without_override *args, &block
+      else
+	      send via, *args, &block
+			end
+		end
+    
     # Automatically uses the :run_method variable to run things.
     # Equivalent to +invoke_command *args, :via=>fetch(:run_method, :run)+
     def vrun(*args, &block)
@@ -48,7 +79,7 @@ module Capsaicin
     def sudo_as(*args, &block)
       options = Hash===args.last ? args.pop.dup : {}
       options[:as] ||= fetch(:runner, nil)
-      sudo *args.push(options), &block
+      sudo_without_override *args.push(options), &block
     end
     
     # Extremely helpful if you only have permission to: sudo su SOMEUSER -c 'command'
@@ -56,7 +87,7 @@ module Capsaicin
       options = Hash===args.last ? args.pop.dup : {}
       as      = options.delete(:as) || fetch(:runner, nil)
       args[0] = "su #{as} -c '#{args[0].gsub("'","'\"'\"'")}'"
-      sudo *args.push(options), &block
+      sudo_without_override *args.push(options), &block
     end
     
     # Extremely helpful if you only have permission to: sudo su - SOMEUSER
@@ -66,7 +97,7 @@ module Capsaicin
       cmd     = args[0].gsub(/[$\\`"]/) { |m| "\\#{m}" }
       as      = options.delete(:as) || fetch(:runner, nil)
       args[0] = "echo \"#{cmd}\" | #{sudo} su - #{as}"
-      run *args.push(options), &block
+      run_without_override *args.push(options), &block
     end
   end
 end

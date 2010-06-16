@@ -6,7 +6,9 @@ class Capsaicin::InvocationTest < Test::Unit::TestCase
 
   def setup
     @ext = CapistranoMock.new
-    @ext.extend Capsaicin::Invocation
+    class << @ext
+	    include Capsaicin::Invocation
+	  end
   end
   
   def teardown
@@ -42,6 +44,18 @@ class Capsaicin::InvocationTest < Test::Unit::TestCase
     check_as_methods(:sudo_su_to, :run) do |c,as|
       ["echo \"uptime\" | sudo su - #{as}", {:shell=>false}]
     end
+  end
+
+  def test_run_without_override
+    @ext.run 'uptime'
+    assert_equal [%w(uptime) << {}], @ext.invocations[:run].last
+  end
+
+  def test_run_with_override
+    @ext.set :override_run_method, :sudo
+    @ext.set :override_runnner, :admin
+    @ext.run 'uptime'
+    assert_equal [%w(uptime)], @ext.invocations[:sudo].last
   end
 
 private

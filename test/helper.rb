@@ -27,7 +27,7 @@ class CapistranoMock
   def #{k}(*args, &block)
     args = [args]
     args << block if block
-    ((@invocations ||= {})[:#{k}] ||= []) << args
+    (@invocations ||= Hash.new{|h,k| h[k]=[]})[:#{k}] << args
   end
 }
   end
