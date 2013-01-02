@@ -1,5 +1,6 @@
 pkg
 doc
+.buildpath
 .loadpath
 .project
 text/fixtures
