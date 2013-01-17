@@ -6,7 +6,7 @@ module Capistrano # :nodoc:
       
       # Specialized copy strategy that expects the compressed package to exist after the source is built.
       class CopyPackage < Copy
-
+        
 		    # Returns the location of the local package file.
 		    # Returns +nil+ unless :package_file has been set. If :package_file
 		    # is +true+, a default file location will be returned.
@@ -22,6 +22,12 @@ module Capistrano # :nodoc:
         def package_name
           @package_name ||= configuration[:package_name] || "#{configuration[:application]}-#{File.basename(destination)}"
         end
+
+	      # Returns the basename of the release_path, which will be used to
+	      # name the local copy and archive file.
+	      def destination
+	        @destination ||= copy_dir
+	      end
         
       private
 
@@ -36,11 +42,18 @@ module Capistrano # :nodoc:
         end
 
         # Don't build an archive file.
+        def copy_repository_to_server  ; end
         def compress_repository        ; end
         def copy_cache_to_staging_area ; end
         def remove_excluded_files      ; end
         def rollback_changes           ; end
                     
+	      # Distributes the file to the remote servers
+	      def distribute!
+	        files.upload(filename, remote_filename)
+	        decompress_remote_file
+	      end
+      
 #     
 #        def xx
 #          logger.debug "compressing local copy to #{filename}"
@@ -53,7 +66,7 @@ module Capistrano # :nodoc:
 #            end
 #          end
 #	      end
-      
+
       end
 
     end
