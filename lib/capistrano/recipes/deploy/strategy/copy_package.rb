@@ -41,6 +41,7 @@ module Capistrano # :nodoc:
         # Don't build an archive file.
         def copy_repository_to_server  ; end
         def compress_repository        ; end
+        def create_revision_file       ; end
         def copy_cache_to_staging_area ; end
         def remove_excluded_files      ; end
         def rollback_changes           ; end
