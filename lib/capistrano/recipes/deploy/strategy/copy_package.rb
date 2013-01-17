@@ -22,18 +22,15 @@ module Capistrano # :nodoc:
         def package_name
           @package_name ||= configuration[:package_name] || "#{configuration[:application]}-#{File.basename(destination)}"
         end
-
-	      # Returns the basename of the release_path, which will be used to
-	      # name the local copy and archive file.
-	      def destination
-	        @destination ||= copy_dir
-	      end
         
       private
 
-	      # Returns the name of the package file to be considered.
+	      def destination
+	        @destination ||= copy_dir
+	      end
+
 	      def filename
-	        @filename ||= package_file || File.join(copy_dir, "#{package_name}.#{compression.extension}")
+	        @filename ||= File.expand_path(package_file, copy_dir)
 	      end
 
         # Returns the value of the :copy_dir variable, defaulting to the current directory.
