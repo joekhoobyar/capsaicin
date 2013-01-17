@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require 'yaml'
 require 'rubygems'
 require 'rake/rdoctask'
 
