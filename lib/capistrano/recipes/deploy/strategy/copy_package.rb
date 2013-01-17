@@ -50,6 +50,10 @@ module Capistrano # :nodoc:
 	        files.upload(filename, remote_filename)
 	        decompress_remote_file
 	      end
+
+	      def decompress_remote_file
+	        run "mkdir -p #{configuration[:release_path]} && cd #{configuration[:release_path]} && #{decompress(remote_filename).join(" ")} && rm #{remote_filename}"
+	      end
       
 #     
 #        def xx
